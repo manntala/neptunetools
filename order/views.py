@@ -164,7 +164,8 @@ def send(request):
     file_path = 'media/save'
     context = {
         'form': form,
-        'template': template
+        'template': template,
+        'file_path': file_path
     }
     # order_processes = get_list_or_404(OrderProcessModel)
     # serializer = OrderProcessSerializer(order_processes, many=True)

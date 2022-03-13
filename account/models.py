@@ -65,7 +65,7 @@ class Account(AbstractBaseUser):
 
 class Profile(models.Model):
     user = models.OneToOneField(Account, on_delete=models.CASCADE)
-    image = models.ImageField(upload_to="profile", default='default.jpg')
+    image = models.ImageField(upload_to="profile", default='https://neptunestatic.s3.ap-southeast-1.amazonaws.com/profile/default.png')
 
     def __str__(self):
         return f'{self.user.username} Profile'

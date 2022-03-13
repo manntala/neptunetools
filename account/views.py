@@ -98,6 +98,9 @@ def account_view(request):
 
 @login_required
 def update_view(request):
+    u_form = AccountUpdateForm(instance=request.user)
+    p_form = ProfileUpdateForm(instance=request.user.profile)
+    
     if request.method == 'POST':
         u_form = AccountUpdateForm(request.POST, instance=request.user)
         p_form = ProfileUpdateForm(request.POST, request.FILES, instance=request.user.profile)

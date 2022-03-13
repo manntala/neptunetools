@@ -12,7 +12,6 @@ from .serializers import UpdateProductModelSerializer, AddProductModelSerializer
 
 import requests
 import pandas as pd 
-import requests
 import json
 import uuid
 import csv

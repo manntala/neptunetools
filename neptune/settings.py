@@ -47,6 +47,7 @@ INSTALLED_APPS = [
     'product',
     'vlookup',
     'crispy_forms',
+    'platform',
 
     # third party
     'storages',

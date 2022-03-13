@@ -161,11 +161,9 @@ def deactivate(request, id):
 def send(request):
     form = CsvModelForm()
     template = OrderTemplate.objects.get(pk=1)
-    file_path = 'https://neptunestatic.s3.amazonaws.com/media/save/'+'orders_template.csv'
     context = {
         'form': form,
-        'template': template,
-        'file_path': file_path
+        'template': template
     }
     # order_processes = get_list_or_404(OrderProcessModel)
     # serializer = OrderProcessSerializer(order_processes, many=True)

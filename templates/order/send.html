@@ -29,16 +29,10 @@
                           <h5 class="card-title card-title-dash">Step 1. Download the template.</h5>
                           <p>IMPORTANT: All fields are required.
                           </p>
-                          <!-- {% if template.order_template %}
+                          {% if template.order_template %}
                           <a href="{{template.order_template.url}}" download="{{template.order_template.url}}">
                             <img class="mr-2" src="{% static 'images/csv_icon.png' %}" style="width: 40px" alt="Order Template" title="Order Template"></a>
-                          {% endif %} -->
-                          {% if file_path %}
-                          <a href="../../{{file_path}}" download="orders_template.csv">
-                            <img class="mr-2" src="{% static 'images/csv_icon.png' %}" style="width: 40px" alt="Order Template" title="Order Template">
-                          </a></div>
                           {% endif %}
-                         
                           </div>
                       </div>
                       <hr />

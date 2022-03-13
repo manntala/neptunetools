@@ -1,0 +1,64 @@
+{% extends 'partials/base.html' %}
+{% load static %}
+{% block title %}View Orders | Neptune{% endblock title %}
+
+{% block content %}
+<div class="col-lg-8 d-flex flex-column">
+    <div class="row flex-grow">
+      <div class="col-12 col-lg-4 col-lg-12 grid-margin stretch-card">
+        <div class="card card-rounded">
+          <div class="card-body">
+            <div class="d-sm-flex justify-content-between align-items-start">
+              <div class="px-4 mt-4">
+               <h4 class="card-title card-title-dash">Display Orders</h4>
+               <h5 class="card-subtitle card-subtitle-dash">This tool will retrieve all orders in your account using APIv3.</h5>
+              </div>
+              <div id="performance-line-legend">
+              </div>
+            </div>
+            <!-- start -->
+            <div class="form-group px-4 mt-2">
+                <div class="sent-message text-success">
+                    {% include 'snippets/messages.html' %}
+                  </div> 
+                  <div class="row mt-5">
+                    <div>
+                        {% if orders %}
+                       
+                        <table class="table table-striped">
+                            <thead>
+                                <tr>
+                                    <th scope="col">Order ID</th>
+                                    <th scope="col">Yotpo ID</th>
+                                    <th scope="col">Order Date</th>
+                                    <th scope="col">Customer Email</th>
+                                    <th scope="col">First Name</th>
+                                    <th scope="col">Last Name</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for order in orders %}
+                                <tr>
+                                    <td>{{order.external_id}}</td>
+                                    <td><a href="{% url 'displayid' order.yotpo_id %}?appkey={{appkey}}&secretkey={{secretkey}}">{{order.yotpo_id}}</a></td>
+                                    <td>{{order.order_date}}</td>
+                                    <td>{{order.customer.email}}</td>
+                                    <td>{{order.customer.first_name}}</td>
+                                    <td>{{order.customer.last_name}}</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                            </table>
+                            
+                            {% endif %}
+                    </div>
+                  </div>
+                
+            </div>
+                <!-- end -->
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+{% endblock content %}

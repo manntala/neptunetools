@@ -1,0 +1,65 @@
+{% extends 'partials/base.html' %}
+{% load static %}
+{% block title %}Update Product Catalog | Neptune{% endblock title %}
+
+{% block content %}
+<div class="col-lg-8 d-flex flex-column">
+    <div class="row flex-grow">
+      <div class="col-12 col-lg-4 col-lg-12 grid-margin stretch-card">
+        <div class="card card-rounded">
+          <div class="card-body">
+            <div class="d-sm-flex justify-content-between align-items-start">
+              <div class="form-group px-4">
+                <br />
+               <h4 class="card-title card-title-dash">Update Product Catalog</h4>
+               <h5 class="card-subtitle card-subtitle-dash">This tool will allow you to update your product catalog.</h5>
+              </div>
+              <div id="performance-line-legend">
+              </div>
+            </div>
+            <!-- start -->
+            <div class="form-group px-4">
+               
+                <div class="sent-message text-success">
+                    {% if messages %}
+                  {% for message in messages %}
+                  <small>{{ message | upper }}</small><br />
+                  {% endfor %}
+                  {% endif %}
+                </div>
+      
+                  <form action="{% url 'uploadaddcatalog' %}" method="post" enctype="multipart/form-data">
+                      {% csrf_token %}
+                    <div class="form-group mt-3 py-3 pr-4">
+                      <h5>Step 1. Upload your Product Catalog.</h5>
+                        <div class="form-group pt-4">
+                           
+                            {{ form.product }}
+                        </div>
+                        
+                    </div>
+                    <div class="text-end pb-4 pt-4"> </div>
+                    <div class="text-end pb-4">
+                      <button type="submit" class="btn btn-primary" style="width: 150px; margin-right: 10px;">Upload</button>
+                      <a href="{% url 'resetproduct' %}" class="btn btn-secondary" style="width: 150px;">Reset</a></div>
+                    <div class="text-end pb-4"></div>
+                  </form>
+                  <hr class="mt-5" />  
+                  <div class="form-group pt-4">
+                    <h5>Step 2. Update your Product Catalog.</h5>
+                    <p></p>
+                  </div>
+                  <div class="text-end pb-4">
+                    <form action="{% url 'catalogadd' %}" method="post" enctype="multipart/form-data">
+                      {% csrf_token %}
+                    <button type="submit" class="btn btn-primary" style="width: 150px; margin-right: 10px;">Add Product</button>
+                  </form>
+                </div>
+                </div>
+                <!-- end -->
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+{% endblock content %}

@@ -1,0 +1,41 @@
+{% load static %}
+<header id="header" class="fixed-top ">
+    <div class="container d-flex align-items-center justify-content-between">
+      <!-- <h1 class="logo"><a href="index.html"><img src="assets/img/logo.png" alt="" class="img-fluid"></a></h1> -->
+      <!-- Uncomment below if you prefer to use an image logo -->
+      <a href="{% url 'home' %}" class="logo"><img src="{% static 'img/white_neptune.png' %}" alt="" class="img-fluid"></a>
+
+      <nav id="navbar" class="navbar">
+        <ul>
+          <li><a class="nav-link scrollto" href="{% url 'home' %}">Home</a></li>
+          <li><a class="nav-link scrollto" href="#contact">Contact</a></li>
+          {% if not request.user.is_authenticated %}
+          <li><a class="nav-link scrollto" href="{% url 'register' %}#register">Register</a></li>
+          {% endif %}
+          {% if request.user.is_authenticated %}
+          <li class="dropdown"><a href="#"><span>{{request.user.first_name|title}}</span> <i class="bi bi-chevron-down"></i></a>
+            <ul>
+              <li><a href="#">Account</a></li>
+              <li><a href=>Generate Token</a></li>
+              <li><a href=>Send Orders</a></li>
+              <li><a href=>View Orders</a></li>
+              <li><a href=>Auto VLookup</a></li>
+              <li><a href=>Shopify Scraper</a></li>
+              <li><a href=>View Product Catalog</a></li>
+              <li><a href=>Update Product Catalog</a></li>
+              <li><a href="{% url 'logout' %}">Logout</a></li>
+              
+            </ul>
+          </li>
+          {% else %}
+           <li><a class="nav-link scrollto" href="{% url 'login' %}#login">Login</a></li>
+          {% endif %} 
+        </ul>
+        <i class="bi bi-list mobile-nav-toggle"></i>
+      </nav><!-- .navbar -->
+
+    </div>
+  </header>
+
+
+  

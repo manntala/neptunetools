@@ -1,0 +1,46 @@
+{% extends 'partials/base.html' %}
+{% load static %}
+{% block title %}Login | Neptune{% endblock title %}
+{% load crispy_forms_tags %}
+
+{% block content %}
+<div class="col-lg-8 d-flex flex-column">
+    <div class="row flex-grow">
+      <div class="col-12 col-lg-4 col-lg-12 grid-margin stretch-card">
+        <div class="card card-rounded">
+          <div class="card-body">
+            <div class="d-sm-flex justify-content-between align-items-start">
+              <div class="form-group px-4">
+                <br />
+               <h4 class="card-title card-title-dash">Profile Information</h4>
+               <h5 class="card-subtitle card-subtitle-dash"></h5>
+              </div>
+              <div id="performance-line-legend">
+              </div>
+            </div>
+            <!-- start -->
+            <div class="form-group px-4">
+              <div class="sent-message text-success col-md-6">
+                {% include 'snippets/messages.html' %}
+              </div>
+              <form action="{% url 'update' %}" method="POST" enctype="multipart/form-data">
+                {% csrf_token %}
+                <br />
+               
+                <div class="form-group py-2"> {{ u_form.first_name }}</div>
+                <div class="form-group py-2"> {{ u_form.last_name }}</div>
+                <div class="form-group py-2"> {{ p_form.image }}</div>
+                <br />
+                <div class="text-end pb-4 pt-4">
+                  <button type="submit" class="btn btn-primary btn-lg" style="width: 150px;">Submit</button>
+                </div>
+                
+              </form> 
+                </div>
+                <!-- end -->
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+{% endblock content %}

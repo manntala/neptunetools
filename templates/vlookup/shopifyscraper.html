@@ -1,0 +1,69 @@
+{% extends 'partials/base.html' %}
+{% load static %}
+{% block title %}Shopify Scraper | Neptune{% endblock title %}
+
+{% block content %}
+<div class="col-lg-8 d-flex flex-column">
+    <div class="row flex-grow">
+      <div class="col-12 col-lg-4 col-lg-12 grid-margin stretch-card">
+        <div class="card card-rounded">
+          <div class="card-body">
+            <div class="d-sm-flex justify-content-between align-items-start">
+              <div class="form-group px-4">
+                <br />
+               <h4 class="card-title card-title-dash">Shopify Scraper</h4>
+               <h5 class="card-subtitle card-subtitle-dash">This tool will allow you to retrieve your Product IDs in Shopify</h5>
+              </div>
+              <div id="performance-line-legend">
+              </div>
+            </div>
+            <!-- start -->
+            
+            <div class="form-group px-4">
+               
+                <form action="{% url 'shopifyscraper' %}" method="post" enctype="multipart/form-data" autocomplete="off">
+                    {% csrf_token %}
+                  
+                  <div class="form-group mt-2 pr-4">
+                    <h5 class="card-title card-title-dash">Step 1. Use the Shopify domain to generate the Product IDs and Product Title.
+                    </h5><br />
+                    <p>&check; Important: Use this format https://shopifyurl.com/.</p>
+                    <p>&check; Please reset the form to process another file.</p>
+                    <br />
+                    
+                    <div class="form-group py-2">
+                      <label for="exampleFormControlFile1">Shopify URL</label> <br />
+                     
+                      {{ form.shopifyurl }}
+                      </div>
+                    <div class="form-group py-2">
+                      <label for="exampleFormControlFile1">Import File</label><br />
+                      
+                      {{ form.reviews }}
+                      </div>  
+                  </div>
+                  <div class="text-end pb-4 pt-4"> </div>
+                  <div class="text-end pb-4 pt-4">
+                   
+                    <button type="submit" class="btn btn-primary" style="width: 150px;">Get Product IDs</button>
+                    <a href="{% url 'resetscraperform' %}" class="btn btn-secondary pl-4" style="width: 150px;">Reset Form</a></div>
+                  
+                  </form>
+                  {% if messages %}
+                  <hr />
+                  <div class="form-group">
+                    <h5>Step 2. Download the CSV.</h5>
+                    <p>If there are empty fields, please check the product title on your Import File.</p>
+                  </div>
+                  <div class="text-end pb-4">
+                  <a href="../../{{file_path}}" download="reviews_processed.csv" class="btn btn-success" style="width: 150px;">Download CSV</a></div>
+                  
+                  {% endif %}
+                </div>
+                <!-- end -->
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+{% endblock content %}

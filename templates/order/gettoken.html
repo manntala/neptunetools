@@ -1,0 +1,79 @@
+{% extends 'partials/base.html' %}
+{% load static %}
+{% block title %}Generate UToken | Neptune{% endblock title %}
+
+{% block content %}
+<div class="col-lg-8 d-flex flex-column">
+    <div class="row flex-grow">
+      <div class="col-12 col-lg-4 col-lg-12 grid-margin stretch-card">
+        <div class="card card-rounded">
+          <div class="card-body">
+            <div class="d-sm-flex justify-content-between align-items-start">
+              <div class="form-group px-4">
+                <br />
+               <h4 class="card-title card-title-dash">Generate UToken</h4>
+               <h5 class="card-subtitle card-subtitle-dash">This will generate your UToken to use APIv3.</h5>
+              </div>
+              <div id="performance-line-legend">
+              </div>
+            </div>
+            <!-- start -->
+            <div class="form-group px-4">
+                <form action="{% url 'gettoken' %}" method="post">
+                    {% csrf_token %}
+                  <div class="form-group mt-3 py-3 pr-4">
+                    <h5></h5>
+                      <div class="form-group">
+                         <label for="exampleFormControlFile1">App Key:</label>
+                         {{ form.appkey }}
+                      </div>
+                      <div class="form-group">
+                          <label for="exampleFormControlFile1">Secret Key:</label>
+                          {{ form.secretkey }}
+                      </div>
+                  </div>
+                  <div class="text-end pb-4"><button type="submit" class="btn btn-primary" style="width: 150px;">Add</button></div>
+                </form>
+
+                <div class="row mt-5">
+                    <div>
+                        {% if keys %}
+                        <h5></h5>
+                        <table class="table table-striped">
+                            <thead>
+                                <tr>
+                                    <th scope="col">Appkey</th>
+                                    <th scope="col"><span class="text-center">Status</span></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                              
+                                {% for key in keys %}
+                                <tr>
+                                    <td>{{key.appkey}}</td>
+                                    <td>
+                                        {% if key.active == True %}
+                                        <a href="{% url 'deactivate' key.id %}"><span class="badge text-success text-center">ACTIVE</span></a>
+                                        {% else %}
+                                        <a href="{% url 'activate' key.id %}"><span class="badge text-danger text-center">INACTIVE</span></a>
+                                        {% endif %}
+                                    </td>
+                                    
+                                </tr>
+                                {% endfor %}
+                              
+                            </tbody>
+                            </table>
+                            
+                            {% endif %}
+                    </div>
+                  </div>
+                
+                </div>
+                <!-- end -->
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+{% endblock content %}

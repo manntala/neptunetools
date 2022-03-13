@@ -1,0 +1,61 @@
+{% extends 'partials/base.html' %}
+{% load static %}
+{% block title %}View Orders by ID | Neptune{% endblock title %}
+
+{% block content %}
+<div class="col-lg-8 d-flex flex-column">
+    <div class="row flex-grow">
+      <div class="col-12 col-lg-4 col-lg-12 grid-margin stretch-card">
+        <div class="card card-rounded">
+          <div class="card-body">
+            <div class="d-sm-flex justify-content-between align-items-start">
+              <div>
+               <h4 class="card-title card-title-dash">Shopify Scraper</h4>
+               <h5 class="card-subtitle card-subtitle-dash">This tool will allow you to retrieve your Product IDs in Shopify</h5>
+              </div>
+              <div id="performance-line-legend">
+              </div>
+            </div>
+            <!-- start -->
+            <div class="form-group px-4">
+               
+                <div class="row mt-5">
+                    <div>
+                      {% if order %}
+                      <h5>Order: {{ order.yotpo_id}} - {{ order.source}}</h5>
+                     
+                      <table class="table table-striped">
+                          <thead>
+                              <tr>
+                                  <th scope="col">Fulfillment Date</th>
+                                  <th scope="col">Fulfillment Status</th>
+                                  <th scope="col">Order Date</th>
+                                  <th score="col">Customer Email</th>
+                                  <th scope="col">Product ID</th>
+                              </tr>
+                          </thead>
+                          <tbody>
+                              
+                              <tr>
+                                 <td>{{ order.fulfillments.0.fulfillment_date }}</td>
+                                 <td>{{ order.fulfillments.0.status }}</td>
+                                  <td>{{order.order_date}}</td>
+                                  <td>{{order.customer.email}}</td>
+                                 
+                                  <td>{{order.line_items.0.product_id}}</td>
+                              </tr>
+                              
+                          </tbody>
+                          </table>
+                          
+                          {% endif %}
+                    </div>
+                  </div>
+                </div>
+                <!-- end -->
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+{% endblock content %}

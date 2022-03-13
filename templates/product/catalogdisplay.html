@@ -1,0 +1,67 @@
+{% extends 'partials/base.html' %}
+{% load static %}
+{% block title %}View Product Catalog | Neptune{% endblock title %}
+
+{% block content %}
+<div class="col-lg-8 d-flex flex-column">
+    <div class="row flex-grow">
+      <div class="col-12 col-lg-4 col-lg-12 grid-margin stretch-card">
+        <div class="card card-rounded">
+          <div class="card-body">
+            <div class="d-sm-flex justify-content-between align-items-start">
+              <div class="form-group px-4">
+                <br />
+               <h4 class="card-title card-title-dash">View Product Catalog</h4>
+               <h5 class="card-subtitle card-subtitle-dash">This tool will allow you to view and download your Product Catalog.</h5>
+              </div>
+              <div id="performance-line-legend">
+              </div>
+            </div>
+            <!-- start -->
+            <div class="form-group px-4">
+               
+              <div class="sent-message text-success">
+                {% if messages %}
+              {% for message in messages %}
+              <small>{{ message | upper }}</small><br />
+              {% endfor %}
+              {% endif %}
+            </div>
+  
+              <form action="{% url 'catalogdisplay' %}" method="post" enctype="multipart/form-data">
+                  {% csrf_token %}
+                <div class="form-group mt-3 py-3 pr-4">
+                  <h5>Generate the token to display the orders.</h5>
+                    <div class="form-group pt-4">
+                        <label for="exampleFormControlFile1">App Key:</label>
+                        <input type="text" class="form-control" id="exampleFormControlFile1" name="appkey">
+                    </div>
+                    <div class="form-group">
+                        <label for="exampleFormControlFile1">Secret Key:</label>
+                        <input type="text" class="form-control" id="exampleFormControlFile1" name="secretkey">
+                    </div>
+                </div>
+                <div class="text-end pb-4 pt-4"> </div>
+                <div class="text-end pb-4">
+                  <button type="submit" class="btn btn-primary" style="width: 150px;">Submit</button>
+                  <button type="reset" class="btn btn-secondary" style="width: 150px;">Reset</button></div>
+              </form>
+              
+              {% if messages %}
+              <hr class="mt-5" />
+            <div class="form-group mt-4">
+              <h5>Step 2. Download the CSV.</h5>
+              <p>If there are empty fields, please check the product title on your Import File.</p>
+            </div>
+            <div class="text-end pb-4">
+            <a href="../../{{file_path}}" download="product_catalog_v3.csv" class="btn btn-success" style="width: 150px;">Download CSV</a></div>
+            
+            {% endif %}
+                </div>
+                <!-- end -->
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+{% endblock content %}

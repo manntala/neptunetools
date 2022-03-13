@@ -1,0 +1,15 @@
+.home-tab .btn, .home-tab .ajax-upload-dragdrop .ajax-file-upload, .ajax-upload-dragdrop .home-tab .ajax-file-upload, .home-tab .swal2-modal .swal2-buttonswrapper .swal2-styled, .swal2-modal .swal2-buttonswrapper .home-tab .swal2-styled {
+    padding: 17px 5px; 
+    color: #fff;
+
+}
+.btn-secondary.btn-light, .btn-secondary.btn-secondary {
+    color: #1E283D;
+}
+.form-control, .asColorPicker-input, .dataTables_wrapper select, .select2-container--default .select2-selection--single, .select2-container--default .select2-selection--single .select2-search__field, .typeahead, .tt-query, .tt-hint {
+    border: 1px solid #dee2e6;
+    font-weight: 400;
+    font-size: 0.875rem;
+    border-radius: 4px;
+    height: auto;
+}

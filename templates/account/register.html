@@ -12,7 +12,10 @@
               <div class="form-group px-4">
                 <br />
                <h4 class="card-title card-title-dash">Register</h4>
-               <h5 class="card-subtitle card-subtitle-dash">Please register and wait for activation.</h5>
+               <h5 class="card-subtitle card-subtitle-dash">
+                 <div class="alert alert-danger" role="alert">
+                   <strong>Warning!</strong> This feature is currently disabled.
+               </h5>
               </div>
               <div id="performance-line-legend">
               </div>
@@ -22,7 +25,7 @@
               <div class="sent-message text-success col-md-6">
                 {% include 'snippets/messages.html' %}
               </div>
-              <form action="{% url 'register' %}" method="POST">
+              <form action="#" method="POST">
                 {% csrf_token %}
                 
                 

@@ -161,7 +161,7 @@ def deactivate(request, id):
 def send(request):
     form = CsvModelForm()
     template = OrderTemplate.objects.get(pk=1)
-    file_path = 'media/save'+'orders_template.csv'
+    file_path = '/media/save/'+'orders_template.csv'
     context = {
         'form': form,
         'template': template,

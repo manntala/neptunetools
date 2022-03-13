@@ -120,7 +120,8 @@ def storeview(request):
             print(output)
 
             context = {               
-                'response': output
+                'response': output,
+                'nav_store2_active': True
             }
 
             print(response.text)

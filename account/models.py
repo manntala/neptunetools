@@ -65,10 +65,10 @@ class Account(AbstractBaseUser):
 
 class Profile(models.Model):
     user = models.OneToOneField(Account, on_delete=models.CASCADE)
-    image = models.ImageField(upload_to="media/profile/", default='default.jpg')
+    image = models.ImageField(upload_to="profile", default='default.jpg')
 
     def __str__(self):
-        return f'{self.user} Profile'
+        return f'{self.user.username} Profile'
     
     # def save(self, *args, **kwargs):
     #     super().save(*args, **kwargs)

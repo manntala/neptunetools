@@ -4,22 +4,28 @@ from django.contrib.auth import login, authenticate, logout
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from account.forms import RegistrationForm, AccountAuthenticationForm, AccountUpdateForm, ProfileUpdateForm
+from account.models import Profile
+
+get_default_profile_image = lambda: 'https://www.onlinewebfonts.com/icon/405142'
 
 def registration_view(request):
     context = {
         'form': RegistrationForm(request.POST)
     }
+    
     if request.POST:
         form = RegistrationForm(request.POST)
         if form.is_valid():
             form.save()
+            
             email = form.cleaned_data.get('email')
             raw_password = form.cleaned_data.get('password1')
             account = authenticate(email=email, password=raw_password)
             # login(request, account)
             # return redirect(dashboard)
+
             messages.add_message(request, messages.SUCCESS, 'Registration successful')
-            return render(request, 'account/login.html')
+            return redirect('login')
 
         else:
             messages.add_message(request, messages.ERROR, 'Invalid registration')
@@ -100,7 +106,7 @@ def account_view(request):
 def update_view(request):
     u_form = AccountUpdateForm(instance=request.user)
     p_form = ProfileUpdateForm(instance=request.user.profile)
-    
+
     if request.method == 'POST':
         u_form = AccountUpdateForm(request.POST, instance=request.user)
         p_form = ProfileUpdateForm(request.POST, request.FILES, instance=request.user.profile)

@@ -147,10 +147,12 @@ REST_FRAMEWORK = {
 STATICFILES_DIRS = [
     'static',
 ]
-STATIC_URL = 'static/'
+
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+STATIC_URL = '/static/'
+
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 MEDIA_URL = '/media/'
-MEDIA_ROOT = os.path.join(BASE_DIR, 'media/')
-# MEDIA_ROOT = ('media')
 
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
 
@@ -174,6 +176,3 @@ STATICFILES_DIRS = [
 # DEFAULT_FILE_STORAGE = 'neptunestatic.media_storages.MediaStorage'
 
 DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
-
-MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
-MEDIA_URL = '/media/'

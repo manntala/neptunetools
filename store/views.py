@@ -42,6 +42,7 @@ def storeupdate(request):
 
             context = {
                 'utoken': response.json()['access_token'],
+                'nav_store1_active': True,
                 }      
 
             url = f"https://api.yotpo.com/apps/{appkey}/account_platform"

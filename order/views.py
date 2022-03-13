@@ -161,9 +161,11 @@ def deactivate(request, id):
 def send(request):
     form = CsvModelForm()
     template = OrderTemplate.objects.get(pk=1)
+    nav_order1_active = True
     context = {
         'form': form,
-        'template': template
+        'template': template,
+        'nav_order1_active': nav_order1_active
     }
     # order_processes = get_list_or_404(OrderProcessModel)
     # serializer = OrderProcessSerializer(order_processes, many=True)
@@ -286,6 +288,7 @@ def send(request):
 @login_required
 def display(request):
     key = GetKey.objects.filter(owner=request.user).filter(active=True)
+    nav_order2_active = True
 
     if key:
         messages.success(request, f'{key[0].appkey} is Selected!')
@@ -324,7 +327,8 @@ def display(request):
                 context = {
                     'orders': orders,
                     'appkey': appkey,
-                    'secretkey': secretkey
+                    'secretkey': secretkey,
+                    'nav_order2_active': nav_order2_active
                 }
                 return render(request, 'order/display.html', context)
             else:
@@ -489,9 +493,11 @@ def view_catalog(request):
 @login_required     
 def gettoken(request):
     form = GetKeyForm()
+    nav_utoken_active = True
     context = {
         'form': form,
-        'keys': GetKey.objects.filter(owner=request.user)
+        'keys': GetKey.objects.filter(owner=request.user),
+        'nav_utoken_active': nav_utoken_active
         }
 
     if request.method == 'POST':
@@ -518,7 +524,8 @@ def gettoken(request):
             response = requests.request("GET", url=url, json=payload, headers=headers)
             utoken = response.json()['access_token']
             context = {
-                'utoken': response.json()['access_token']
+                'utoken': response.json()['access_token'],
+                'nav_utoken_active': nav_utoken_active
                 }      
 
             fs.token = utoken

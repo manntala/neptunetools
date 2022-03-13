@@ -118,6 +118,7 @@ def catalogdisplay(request):
             context = {
                 'file_path': file_path+'product_catalog_v3.csv',
                 'file_name': 'product_catalog_v3.csv',
+                'nav_prod1_active': True
                 
             }
 
@@ -129,7 +130,7 @@ def catalogdisplay(request):
             return redirect(to='catalogdisplay')
 
     # messages.add_message(request, messages.ERROR, 'Invalid!')
-    return render(request, 'product/catalogdisplay.html')
+    return render(request, 'product/catalogdisplay.html', {'nav_prod1_active': True})
 
 @login_required
 def createproduct(request):
@@ -262,7 +263,8 @@ def uploadaddcatalog(request):
 @login_required
 def catalogupdate(request):
     context = {
-        'form': UploadCsvModelForm()
+        'form': UploadCsvModelForm(),
+        'nav_prod3_active': True
     }
     if request.method == 'POST':
         data_form = UploadCsvModelForm(request.POST, request.FILES or None)
@@ -396,7 +398,8 @@ def catalogupdate(request):
 @login_required
 def catalogadd(request):
     context = {
-        'form': UploadCsvModelForm()
+        'form': UploadCsvModelForm(),
+        'nav_prod2_active': True
     }
     if request.method == 'POST':
         data_form = UploadCsvModelForm(request.POST, request.FILES or None)

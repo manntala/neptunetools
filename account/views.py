@@ -117,7 +117,8 @@ def update_view(request):
 
     context = {
         'u_form': u_form,
-        'p_form': p_form
+        'p_form': p_form,
+        'nav_profile1': True
     }
     return render(request, 'account/update.html', context)
 

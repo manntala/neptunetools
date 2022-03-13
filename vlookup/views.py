@@ -228,8 +228,10 @@ def view_products(request):
 @login_required
 def autoretrieve(request):
     form =  UploadDataForm()
+    nav_vlookup_active = True
     context = {
-    'form' : form
+        'form' : form,
+        'nav_vlookup_active' : nav_vlookup_active,
     }
 
     if request.method == 'POST':
@@ -277,7 +279,8 @@ def autoretrieve(request):
             context = {
                 'file_path': file_path+'reviews_processed.csv',
                 'file_name': 'reviews_processed.csv',
-                'form' : form
+                'form' : form,
+                'nav_vlookup_active' : nav_vlookup_active,
             }
             messages.add_message(request, messages.SUCCESS, 'Processing done!')
             return render(request, 'vlookup/autoretrieve.html', context)
@@ -310,8 +313,10 @@ def resetscraperform(request):
 @login_required
 def shopifyscraper(request):
     form =  UploadScraperForm()
+    nav_shopify_active = True
     context = {
-    'form' : form
+        'form' : form,
+        'nav_shopify_active' : nav_shopify_active
     }
     # url = 'https://www.biggerthehoop.com/products.json'
 
@@ -374,7 +379,8 @@ def shopifyscraper(request):
                 context = {
                     'file_path': file_path+'reviews_processed.csv',
                     'file_name': 'reviews_processed.csv',
-                    'form' : UploadScraperForm()
+                    'form' : UploadScraperForm(),
+                    'nav_shopify_active' : nav_shopify_active
                 }
                 messages.add_message(request, messages.SUCCESS, 'Processing done!')
                 return render(request, 'vlookup/shopifyscraper.html', context)

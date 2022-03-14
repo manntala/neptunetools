@@ -192,11 +192,12 @@ AWS_S3_FILE_OVERWRITE = False
 AWS_DEFAULT_ACL = None
 # AWS_LOCATION = 'neptunestatic'
 
-STATICFILES_DIRS = [
-    'static',
-]
+# STATICFILES_DIRS = [
+#     'static',
+# ]
 # STATIC_URL = 'https://%s/%s/' % (AWS_S3_CUSTOM_DOMAIN, AWS_LOCATION)
 # STATICFILES_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
 # DEFAULT_FILE_STORAGE = 'neptunestatic.media_storages.MediaStorage'
 
 DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
+STATICFILES_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'

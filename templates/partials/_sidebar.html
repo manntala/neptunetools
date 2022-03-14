@@ -64,15 +64,16 @@
               </ul>
             </div>
           </li>
-          <li class="nav-item {% if nav_store1_active or nav_store2_active == True %}active{% endif %}">
-            <a class="nav-link" data-bs-toggle="collapse" href="#icons" aria-expanded="{% if nav_store1_active or nav_store2_active == True %}show{% endif %}" aria-controls="icons">
+          <li class="nav-item {% if nav_store1_active or nav_addtoken_active or nav_store2_active == True %}active{% endif %}">
+            <a class="nav-link" data-bs-toggle="collapse" href="#icons" aria-expanded="{% if nav_store1_active or nav_addtoken_active or nav_store2_active == True %}show{% endif %}" aria-controls="icons">
               <i class="menu-icon mdi mdi-layers-outline"></i>
-              <span class="menu-title">Fix Token</span>
+              <span class="menu-title">Validate Token</span>
               <i class="menu-arrow"></i>
             </a>
-            <div class="collapse {% if nav_store1_active or nav_store2_active == True %}show{% endif %}" id="icons">
+            <div class="collapse {% if nav_store1_active or nav_addtoken_active or nav_store2_active == True %}show{% endif %}" id="icons">
               <ul class="nav flex-column sub-menu">
-                <li class="nav-item"> <a class="nav-link {% if nav_store1_active == True %}active{% endif %}" href="{% url 'storeupdate' %}">Update Token</a></li>
+                <li class="nav-item"> <a class="nav-link {% if nav_store1_active == True %}active{% endif %}" href="{% url 'removetoken' %}">Remove Token</a></li>
+                <li class="nav-item"> <a class="nav-link {% if nav_addtoken_active == True %}active{% endif %}" href="{% url 'addtoken' %}">Add Token</a></li>
                 <li class="nav-item"> <a class="nav-link {% if nav_store2_active == True %}active{% endif %}" href="{% url 'storeview' %}">View Token</a></li>
                 
               </ul>

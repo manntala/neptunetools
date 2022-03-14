@@ -11,8 +11,8 @@
             <div class="d-sm-flex justify-content-between align-items-start">
               <div class="form-group px-4">
                 <br />
-               <h4 class="card-title card-title-dash">Update Tokens</h4>
-               <h5 class="card-subtitle card-subtitle-dash">Update shop token and shop domain.</h5>
+               <h4 class="card-title card-title-dash">Fix invalid token 1</h4>
+               <h5 class="card-subtitle card-subtitle-dash">REMOVE: Shop Token, Secret Token and Shop Domain from your Inactive Account/Store.</h5>
               </div>
               <div id="performance-line-legend">
               </div>
@@ -21,50 +21,31 @@
             <div class="form-group px-4">
                
               <div class="sent-message text-success">
-                {% if messages %}
-              {% for message in messages %}
-              <small>{{ message | upper }}</small><br />
-              {% endfor %}
-              {% endif %}
-            </div>
+                {% include 'snippets/messages.html' %}
+              </div>
+            <br />
   
-              <form action="{% url 'storeupdate' %}" method="post" enctype="multipart/form-data">
+              <form action="{% url 'removetoken' %}" method="post" enctype="multipart/form-data">
                   {% csrf_token %}
                 <div class="form-group mt-3 py-3 pr-4">
                   <h5>Step 1. Input your App key and Secret Key.</h5>
-                    <div class="form-group pt-4">
+                    <div class="form-group">
                         <label for="exampleFormControlFile1">App Key:</label>
                         <input type="text" class="form-control" id="exampleFormControlFile1" name="appkey">
                     </div>
                     <div class="form-group">
                         <label for="exampleFormControlFile1">Secret Key:</label>
                         <input type="text" class="form-control" id="exampleFormControlFile1" name="secretkey">
+
                     </div>
+                    
                 </div>
-                <div class="form-group pr-4">
-                <h5>Step 2. Input Shop token and Shop domain.</h5>
-                <div class="form-group">
-                    <label for="exampleFormControlFile1">Shop token:</label>
-                    <input type="text" name="shop_token" class="form-control">
-                </div>
-                <div class="form-group">
-                    <label for="exampleFormControlFile1">Shop domain:</label>
-                    <input type="text" name="shop_domain" class="form-control">
-                </div>
-                </div>
-                <div class="form-group mt-3 py-3 pr-4">
-                
                 <div class="text-end pb-4">
                   <button type="submit" class="btn btn-primary" style="width: 150px;">Submit</button>
                   <button type="reset" class="btn btn-secondary" style="width: 150px;">Reset</button>
                 </div>
-                </div>
+                </form>
 
-
-              </form>
-
-             
-              
                 </div>
                 <!-- end -->
           </div>

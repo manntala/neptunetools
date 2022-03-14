@@ -20,18 +20,16 @@
             <!-- start -->
             <div class="form-group px-4">
                
-              <div class="sent-message text-success">
-                {% if messages %}
-              {% for message in messages %}
-              <small>{{ message | upper }}</small><br />
-              {% endfor %}
-              {% endif %}
+              
+            <div class="sent-message text-success">
+              {% include 'snippets/messages.html' %}
             </div>
+            <br />
   
               <form action="{% url 'storeview' %}" method="post" enctype="multipart/form-data">
                   {% csrf_token %}
                 <div class="form-group mt-3 py-3 pr-4">
-                  <h5>Step 1. Input your App key and Secret Key.</h5>
+                  <h5>Input your App key and Secret Key.</h5>
                     <div class="form-group pt-4">
                         <label for="exampleFormControlFile1">App Key:</label>
                         <input type="text" class="form-control" id="exampleFormControlFile1" name="appkey">

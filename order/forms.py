@@ -14,11 +14,12 @@ class CsvModelForm(forms.ModelForm):
         model = Csv
         fields = ('file_name',)
 
-class GetKeyForm(forms.ModelForm):
+
+class GetKeyForm(forms.Form):
     appkey = forms.CharField(widget=forms.TextInput(attrs={'placeholder':'', 'class':'form-control', }))
     secretkey = forms.CharField(widget=forms.TextInput(attrs={'placeholder':'', 'class':'form-control', }))
+
     class Meta:
-        model = GetKey
         fields = ('appkey', 'secretkey',)
 
         

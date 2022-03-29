@@ -39,7 +39,7 @@
                       <form action="{% url 'uploadcsv' %}" method="post" enctype="multipart/form-data">
                         {% csrf_token %}
                       <div class="form-group mt-3 py-3 pr-4">
-                        <h5 class="card-title card-title-dash">Step 2. Upload CSV.</h5>
+                        <h5 class="card-title card-title-dash">Step 1. Upload CSV.</h5>
                         {{form.as_p}}
                       </div>
                       <div class="text-end pb-4">
@@ -51,6 +51,18 @@
                       
                           <form action="{% url 'send' %}" method="post">
                             {% csrf_token %}
+                            <div class="form-group mt-3 py-3 pr-4">
+                              <h5>Step 2. Input your App key and Secret Key.</h5>
+                                <div class="form-group pt-4">
+                                    <label for="exampleFormControlFile1">App Key:</label>
+                                    {{ keyform.appkey }}
+                                </div>
+                                <div class="form-group">
+                                    <label for="exampleFormControlFile1">Secret Key:</label>
+                                    {{ keyform.secretkey }}
+                                </div>
+                            </div>
+                              
                           <div class="form-group mt-3 py-3 pr-4">
                             <h5 class="card-title card-title-dash">Step 3. Send the orders.</h5>
                             <p>Please click the button to submit your orders.</p>

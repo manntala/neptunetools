@@ -79,6 +79,21 @@
               </ul>
             </div>
           </li>
+          <li class="nav-item {% if nav_api_reviews1 or nav_api_reviews2 or nav_api_reviews3 == True %}active{% endif %}">
+            <a class="nav-link" data-bs-toggle="collapse" href="#icons2" aria-expanded="{% if nav_api_reviews1 or nav_api_reviews2 or nav_api_reviews3 == True %}show{% endif %}" aria-controls="icons">
+              <i class="menu-icon mdi mdi-tshirt-v-outline"></i>
+              <span class="menu-title">UGC APIs</span>
+              <i class="menu-arrow"></i>
+            </a>
+            <div class="collapse {% if nav_api_reviews1 or nav_api_reviews2 or nav_api_reviews3 == True %}show{% endif %}" id="icons2">
+              <ul class="nav flex-column sub-menu">
+                <li class="nav-item"> <a class="nav-link {% if nav_api_reviews == True %}active{% endif %}" href="{% url 'api_reviews' %}">All Reviews</a></li>
+                <li class="nav-item"> <a class="nav-link {% if nav_api_reviews2 == True %}active{% endif %}" href="{% url 'api_reviews2' %}">Yotpo Reviews</a></li>
+                <li class="nav-item"> <a class="nav-link {% if nav_api_reviews3 == True %}active{% endif %}" href="{% url 'reviewAPI' %}">Send Reviews</a></li>
+                
+              </ul>
+            </div>
+          </li>
           <li class="nav-item nav-category">Profile</li>
           <li class="nav-item {% if nav_profile1 or nav_profile2 == True %}active{% endif %}">
             <a class="nav-link" data-bs-toggle="collapse" href="#auth" aria-expanded="{% if nav_profile1 or nav_profile2 == True %}true{% else %}false{% endif %}" aria-controls="auth">
@@ -100,6 +115,7 @@
               <span class="menu-title">Report Bugs</span>
             </a>
           </li>
+          
         </ul>
         {% endif %}
       </nav>

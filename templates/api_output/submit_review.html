@@ -1,0 +1,168 @@
+{% extends 'partials/base.html' %}
+{% load static %}
+{% block title %}Active Account/Store | Neptune{% endblock title %}
+
+{% block content %}
+<style>
+  .form-control, .asColorPicker-input, .dataTables_wrapper select, .select2-container--default .select2-selection--single, .select2-container--default .select2-selection--single .select2-search__field, .typeahead, .tt-query, .tt-hint {
+    border: 1px solid #dee2e6 !important;
+}
+</style>
+<link href="https://netdna.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<link rel="stylesheet" href="{% static 'css/rating.css' %}">
+
+
+<div class="col-lg-8 d-flex flex-column">
+    <div class="row flex-grow">
+      <div class="col-12 col-lg-4 col-lg-12 grid-margin stretch-card">
+        <div class="card card-rounded">
+          <div class="card-body">
+            <div class="d-sm-flex justify-content-between align-items-start">
+              <div class="form-group px-4">
+                <br />
+               <h4 class="card-title card-title-dash">Create Reviews API</h4>
+               <h5 class="card-subtitle card-subtitle-dash">Send reviews to Yotpo using APIv1.</h5>
+              </div>
+              <div id="performance-line-legend">
+              </div>
+            </div>
+            <!-- start -->
+            <div class="form-group px-4">
+               
+                <div class="col-lg-6">
+              
+                    <div class="bg-accent px-3 pl-md-11 pr-md-10 pt-6 pb-7" data-animate="fadeInRight">
+                      <div class="slick-slider custom-slider-1 mx-0"
+                               data-slick-options='{"slidesToShow": 1, "autoplay":true,"dots":true}'>
+                        <!-- start of review -->   
+                        {% for review in reviews %}    
+                        <div class="box px-0">
+                          <div class="card border-0 bg-transparent">
+                            <div class="card-body p-0">
+                              <div class="d-flex mb-6 align-items-end">
+                                <h6 class="card-title fs-24 text-secondary mb-0">{{review.subject}}</h6>
+                                
+                                <span class="ml-3">
+                                  <i class="{% if review.rating >= 1 %}fas{% else %}far{% endif %} fa-star text-warning"></i>
+                                  <i class="{% if review.rating >= 2 %}fas{% else %}far{% endif %} fa-star text-warning"></i>
+                                  <i class="{% if review.rating >= 3 %}fas{% else %}far{% endif %} fa-star text-warning"></i>
+                                  <i class="{% if review.rating >= 4 %}fas{% else %}far{% endif %} fa-star text-warning"></i>
+                                  <i class="{% if review.rating >= 5 %}fas{% else %}far{% endif %} fa-star text-warning"></i>
+                                  
+                                </span>
+                                <div class="ml-auto opacity-2">
+                                  <img src="" alt="quote">
+                                </div>
+                              </div>
+                              <p class="card-text fs-18 lh-2 text-heading mb-5">
+                                {{review.review}}
+                              </p>
+                              <div class="media align-items-center">
+                                <!-- <div class="rounded-circle mr-4 bg-white w-70px h-70 d-flex align-items-end justify-content-center">
+                                   <img src="{% static 'images/png/guest_icon.png' %}" alt="Guest" width="70%">
+                                                       
+                                </div> -->
+                                <div class="media-body">
+                                  <p class="fs-17 lh-1 text-heading font-weight-600 mb-2">{{review.guestname}}</p>
+                                  <p class="fs-15 lh-12 mb-0">{{review.updated_date}}</p>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                       
+                        {% endfor %}
+                        <!-- end of review -->
+                      </div>
+                    </div>
+                   
+                    <p>{{averageRating}}</p>
+                    
+                  
+                  
+                    <div class="card border-0">
+                      
+                        <div class="card card-body">
+                      <div class="card-body p-6">
+                        <h5 class="mb-3">How do you rate us?</h5>
+                        <form method="post" action="{% url 'reviewAPI' %}">
+                          {% csrf_token %}
+                          <div class="form-group mb-4 d-flex justify-content-start">
+                            <div class="rate-input">
+                              <input type="radio" id="star5" name="rating" value="5"/>
+                              <label for="star5" title="text" class="rate mb-0 mr-1 lh-1">
+                                <i class="fa fa-star"></i>
+                              </label>
+                              <input type="radio" id="star4" name="rating" value="4"/>
+                              <label for="star4" title="text" class="rate mb-0 mr-1 lh-1">
+                                <i class="fa fa-star"></i>
+                              </label>
+                              <input type="radio" id="star3" name="rating" value="3"/>
+                              <label for="star3" title="text" class="rate mb-0 mr-1 lh-1">
+                                <i class="fa fa-star"></i>
+                              </label>
+                              <input type="radio" id="star2" name="rating" value="2"/>
+                              <label for="star2" title="text" class="rate mb-0 mr-1 lh-1">
+                                <i class="fa fa-star"></i>
+                              </label>
+                              <input type="radio" id="star1" name="rating" value="1"/>
+                              <label for="star1" title="text" class="rate mb-0 mr-1 lh-1">
+                                <i class="fa fa-star"></i>
+                              </label>
+                            </div>
+                          </div>
+                          <div class="row">
+                            <div class="col-md-12">
+                              
+                              
+                              <div class="form-group mb-4">
+                                <input placeholder="Title"
+                                                     class="form-control form-control-lg border-0"
+                                                     type="text" name="subject" required>
+                              </div>
+                              
+                              
+                            </div>
+                            
+                          </div>
+                          <div class="form-group mb-6">
+                            <textarea class="form-control border-0" placeholder="Your Review" name="review"
+                                                rows="5"></textarea>
+                          </div>
+                          <br />
+                          <div class="form-group mb-4">
+                            <input placeholder="Email"
+                                                 class="form-control form-control-lg border-0"
+                                                 type="email" name="email" required>
+                          </div>
+                          
+                          <div class="form-group mb-4">
+                            <input placeholder="Name"
+                                                 class="form-control form-control-lg border-0"
+                                                 type="text" name="name" required>
+                          </div>
+                         
+                            <button type="submit" class="btn btn-lg btn-primary px-9" style="width: 150px">Submit review</button>
+                          
+                        </form>
+                      </div>
+                    </div>
+                    </div>
+                  
+                    
+                  </div>
+
+
+              
+
+             
+              
+                </div>
+                <!-- end -->
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+{% endblock content %}

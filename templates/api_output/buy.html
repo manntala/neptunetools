@@ -1,0 +1,60 @@
+{% extends 'partials/base.html' %}
+{% load static %}
+{% block title %}View Orders | Neptune{% endblock title %}
+
+{% block content %}
+<div class="col-lg-8 d-flex flex-column">
+    <div class="row flex-grow">
+      <div class="col-12 col-lg-4 col-lg-12 grid-margin stretch-card">
+        <div class="card card-rounded">
+          <div class="card-body">
+            <div class="d-sm-flex justify-content-between align-items-start">
+              <div class="px-4 mt-4">
+               <h4 class="card-title card-title-dash">Asus Laptop</h4>
+               <h5 class="card-subtitle card-subtitle-dash">Buy Now!</h5>
+              </div>
+              <div id="performance-line-legend">
+              </div>
+            </div>
+            <!-- start -->
+            <div class="form-group px-4 mt-2">
+                <div class="sent-message text-success">
+                    {% include 'snippets/messages.html' %}
+                  </div> 
+                  <form action="{% url 'buy' %}" method="post">
+                      {% csrf_token %}
+                  <div class="row mt-5">
+                    <img src="{% static 'images/laptop.gif' %}" style="width: 30%;">
+                    <h3 class="mb-4">ASUS ROG Zephyrus M15 GU502LU 15.6</h3>
+                    <p>i7-10750H
+                        GTX 1660Ti 6GB
+                        16GB DDR4
+                        512GB SSD
+                        Prism Gray]
+                        Product Details
+                        15.6" Full HD display 144Hz Widescreen LED
+                        10th Gen Intel® Core™ i7-10750H 2.6 gigahertz
+                        NVIDIA GeForce GTX 1660Ti 6GB
+                        16GB DDR4 3200MHz
+                        512GB SSD
+                        Windows 10 64bit
+                        RGB Backlit Keyboard
+                        Wireless/Wired connectivity (WiFi 6 - 802.11 ax)</p>
+                  </div>
+                  <div class="row mt-5">
+                      <input type="text" name="order_external_id" class="form-control" placeholder="Order ID">
+                   
+                  <div class="row mt-5">
+                     
+                    <button type="submit" class="btn btn-primary" style="width: 150px;">Buy</button>
+                  </div>
+                  </form>
+                
+            </div>
+                <!-- end -->
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+{% endblock content %}

@@ -37,6 +37,8 @@ from django.contrib.auth.models import User
 from .serializers import UserSerializer, RegisterSerializer, LoginSerializer, OrderProcessSerializer
 from .models import OrderProcessModel, OrderTemplate
 
+from django.core.files.storage import default_storage as storage
+
 import pandas as pd 
 import re
 import mimetypes
@@ -81,7 +83,7 @@ def uploadcsv(request):
         form.save()
         form = CsvModelForm()
         obj = Csv.objects.get(identifier=fs.identifier)
-        with open(obj.file_name.path, 'r', encoding="utf-8") as f:
+        with storage.open(obj.file_name.name, 'r') as f:
             reader = csv.reader(f)
             review_count = 0
             for i, row in enumerate(reader):
@@ -129,6 +131,7 @@ def download(request,path):
             response = HttpResponse(fh.read(), content_type='application/csv')
             response['Content-Disposition'] = 'inline;filename='+os.path.basename(file_path)
             return response
+
 @login_required
 def activate(request, id):
     not_selected = GetKey.objects.all().exclude(id=id) # get all the objects that are not selected
@@ -162,29 +165,28 @@ def send(request):
     form = CsvModelForm()
     template = OrderTemplate.objects.get(pk=1)
     nav_order1_active = True
+    keyform = GetKeyForm(request.POST)
+
     context = {
         'form': form,
         'template': template,
-        'nav_order1_active': nav_order1_active
+        'nav_order1_active': nav_order1_active,
+        'keyform': keyform
     }
     # order_processes = get_list_or_404(OrderProcessModel)
     # serializer = OrderProcessSerializer(order_processes, many=True)
 
     if request.method == 'POST':
-        key = GetKey.objects.filter(owner=request.user).filter(active=True)
+        keyform = GetKeyForm(request.POST)
 
-        if key:
-            messages.success(request, f'App Key: {key[0].appkey}')
+        if keyform.is_valid():
+            appkey = keyform.cleaned_data['appkey']
+            secretkey = keyform.cleaned_data['secretkey']
 
-            appkey = key[0].appkey
-            secretkey = key[0].secretkey
-
-            HttpResponse(appkey, secretkey)
-            
             payload = {
-                "client_id": appkey,
-                "client_secret": secretkey,
-                "grant_type": "client_credentials"
+            "client_id": appkey,
+            "client_secret": secretkey,
+            "grant_type": "client_credentials"
             }
 
             headers = {
@@ -194,10 +196,6 @@ def send(request):
             url = 'https://api.yotpo.com/oauth/token'
             response = requests.request("GET", url=url, json=payload, headers=headers)
             utoken = response.json()['access_token']
-            # context = {
-            #     'utoken': response.json()['access_token']
-            #     }       
-            # messages.add_message(request, messages.INFO, f'{utoken}')
         
             if utoken:
                 order_processes = OrderProcessModel.objects.filter(owner=request.user).filter(sent=False)
@@ -282,65 +280,71 @@ def send(request):
             return redirect(to='send')
    
     # end of post
-    else:      
-        return render(request, 'order/send.html', context)
+         
+    return render(request, 'order/send.html', context)
 
 @login_required
 def display(request):
-    key = GetKey.objects.filter(owner=request.user).filter(active=True)
-    nav_order2_active = True
+    keyform = GetKeyForm()
 
-    if key:
-        messages.success(request, f'{key[0].appkey} is Selected!')
+    context = {
+        'keyform': keyform,
+        'nav_order2_active': True
+    }
 
-        appkey = key[0].appkey
-        secretkey = key[0].secretkey
+    if request.method == 'POST':
+        keyform = GetKeyForm(request.POST)
 
-        HttpResponse(appkey, secretkey)
-        
-        payload = {
+        if keyform.is_valid():
+            appkey = keyform.cleaned_data['appkey']
+            secretkey = keyform.cleaned_data['secretkey']
+
+            print(appkey, secretkey)
+
+            payload = {
             "client_id": appkey,
             "client_secret": secretkey,
             "grant_type": "client_credentials"
-        }
-
-        headers = {
-            "Accept": "application/json",
-            "Content-Type": "application/json"
-        }
-        url = 'https://api.yotpo.com/oauth/token'
-        response = requests.request("GET", url=url, json=payload, headers=headers)
-        utoken = response.json()['access_token']
-
-        
-        if utoken:
-            url = f"https://api.yotpo.com/core/v3/stores/{appkey}/orders"
+            }
 
             headers = {
-                "X-Yotpo-Token": f"{utoken}",
                 "Accept": "application/json",
                 "Content-Type": "application/json"
             }
-            response = requests.request("GET", url=url, headers=headers)
-            if response:
-                orders = response.json()['orders']
-                context = {
-                    'orders': orders,
-                    'appkey': appkey,
-                    'secretkey': secretkey,
-                    'nav_order2_active': nav_order2_active
-                }
-                return render(request, 'order/display.html', context)
-            else:
-                messages.add_message(request, messages.ERROR, 'No orders found!')
-                return redirect(to='order/display')
-        
-        else:
-            messages.add_message(request, messages.ERROR, 'Invalid Token!')
-            return redirect(to='order/display')
+            url = 'https://api.yotpo.com/oauth/token'
+            response = requests.request("GET", url=url, json=payload, headers=headers)
+            utoken = response.json()['access_token']
+       
+            if utoken:
+                url = f"https://api.yotpo.com/core/v3/stores/{appkey}/orders"
 
-    messages.add_message(request, messages.ERROR, 'Please Add/Activate your AppKey/SecretKey!')
-    return render(request, 'order/display.html')
+                headers = {
+                    "X-Yotpo-Token": f"{utoken}",
+                    "Accept": "application/json",
+                    "Content-Type": "application/json"
+                }
+                response = requests.request("GET", url=url, headers=headers)
+                if response:
+                    orders = response.json()['orders']
+                    context = {
+                        'orders': orders,
+                        'nav_order2_active': True,
+                        'keyform': keyform
+                    }
+                    return render(request, 'order/display.html', context)
+                else:
+                    messages.add_message(request, messages.ERROR, 'No orders found!')
+                    return redirect(to='display')
+            
+            else:
+                messages.add_message(request, messages.ERROR, 'Invalid Token!')
+                return redirect(to='display')
+        else:
+            messages.add_message(request, messages.ERROR, 'Invalid Input!')
+            return redirect(to='display')
+
+    
+    return render(request, 'order/display.html', context)
 
 @login_required
 def displayid(request, id):

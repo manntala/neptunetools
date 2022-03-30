@@ -7,17 +7,13 @@
           </button>
         </div>
         <div>
-          <a class="navbar-brand brand-logo" href="{% url 'dashboard' %}">
-            <img src="{% static 'images/neptune.svg' %}" alt="logo" />
-          </a>
-          <a class="navbar-brand brand-logo-mini" href="{% url 'dashboard' %}">
-            <img src="{% static 'images/logo-mini.svg' %}" alt="logo" />
-          </a>
+          
         </div>
       </div>
       <div class="navbar-menu-wrapper d-flex align-items-top"> 
         <ul class="navbar-nav">
-          <li class="nav-item font-weight-semibold d-none d-lg-block ms-0">
+          <li class="nav-item font-weight-semibold d-none d-lg-block ms-0 mt-3">
+            <img src="{% static 'images/neptune.svg' %}" alt="logo" height="57px" />
             <!-- <h1 class="welcome-text">Welcome, <span class="text-black fw-bold">
               {% if request.user.first_name %}
               {{ request.user.first_name }}!
@@ -25,7 +21,7 @@
               Guest!
               {% endif %}
             </span></h1> -->
-            <h3 class="welcome-sub-text"></h3>
+            
           </li>
         </ul>
         <ul class="navbar-nav ms-auto">

@@ -5,12 +5,12 @@ from django.contrib.auth import authenticate
 from account.models import Account, Profile
 
 class RegistrationForm(UserCreationForm):
-    email = forms.EmailField(max_length=254, help_text='Required. Add a valid email address.', widget= forms.TextInput (attrs={'placeholder':'Email'}))
-    username = forms.CharField(max_length=30, help_text='Required. 30 characters or fewer. Letters, digits and @/./+/-/_ only.', widget= forms.TextInput (attrs={'placeholder':'Username'}))
-    first_name= forms.CharField(max_length=100, widget= forms.TextInput (attrs={'placeholder':'Enter your first name'}))
-    last_name= forms.CharField(max_length=100, widget= forms.TextInput (attrs={'placeholder':'Enter your last name'}))
-    password1 = forms.CharField(label='Password', widget= forms.PasswordInput(attrs={'placeholder':'Password'}))
-    password2 = forms.CharField(label='Password confirmation', widget= forms.PasswordInput(attrs={'placeholder':'Confirm Password'}))
+    email = forms.EmailField(max_length=254, help_text='Required. Add a valid email address.', widget= forms.TextInput (attrs={'placeholder':''}))
+    username = forms.CharField(max_length=30, help_text='Required. 30 characters or fewer. Letters, digits and @/./+/-/_ only.', widget= forms.TextInput (attrs={'placeholder':''}))
+    first_name= forms.CharField(max_length=100, widget= forms.TextInput (attrs={'placeholder':''}))
+    last_name= forms.CharField(max_length=100, widget= forms.TextInput (attrs={'placeholder':''}))
+    password1 = forms.CharField(label='Password', widget= forms.PasswordInput(attrs={'placeholder':''}))
+    password2 = forms.CharField(label='Password confirmation', widget= forms.PasswordInput(attrs={'placeholder':''}))
 
 
     class Meta:
@@ -23,8 +23,8 @@ class RegistrationForm(UserCreationForm):
             visible.field.widget.attrs['class'] = 'form-control'
 
 class AccountAuthenticationForm(forms.ModelForm):
-    email = forms.CharField(label='Email', widget=forms.TextInput (attrs={'placeholder':'Email'}))
-    password = forms.CharField(label='Password', widget=forms.PasswordInput (attrs={'placeholder':'Password'}))
+    email = forms.CharField(label='Email', widget=forms.TextInput (attrs={'placeholder':''}))
+    password = forms.CharField(label='Password', widget=forms.PasswordInput (attrs={'placeholder':''}))
 
     class Meta:
         model = Account

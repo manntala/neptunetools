@@ -21,7 +21,7 @@ random_pic = [1,2,3,4,5,6,7,8]
 
 def api_reviews(request):
 
-    url = "https://api.yotpo.com/v1/apps/pX24FKZoDxZliIxSRQQyJJpC4RFUyRNePwdgWzv5/reviews?utoken=FvB52lhkqJqk4OV9oGYaXdztGChNsYX58dNTjbsZ&count=200"
+    url = "https://api.yotpo.com/v1/apps/pX24FKZoDxZliIxSRQQyJJpC4RFUyRNePwdgWzv5/reviews?utoken=FvB52lhkqJqk4OV9oGYaXdztGChNsYX58dNTjbsZ&count=7"
 
     headers = {
         "Accept": "application/json",

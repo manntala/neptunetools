@@ -9,6 +9,11 @@ from account.models import Profile
 get_default_profile_image = lambda: 'https://www.onlinewebfonts.com/icon/405142'
 
 def registration_view(request):
+
+    if request.user.is_authenticated: 
+        return redirect(to='dashboard')
+    
+
     context = {
         'form': RegistrationForm(request.POST)
     }

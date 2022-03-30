@@ -13,8 +13,9 @@
                 <br />
                <h4 class="card-title card-title-dash">Register</h4>
                <h5 class="card-subtitle card-subtitle-dash">
-                 <div class="alert alert-danger" role="alert">
-                   <strong>Warning!</strong> This feature is currently disabled.
+                 <div class="alert alert-warning mt-4" role="alert">
+                   <strong>INFO! </strong>Contact your admin to activate your account.
+                   </div>
                </h5>
               </div>
               <div id="performance-line-legend">
@@ -25,7 +26,7 @@
               <div class="sent-message text-success col-md-6">
                 {% include 'snippets/messages.html' %}
               </div>
-              <form>
+              <form method="post" action="{% url 'register' %}">
                 {% csrf_token %}
                 
                 

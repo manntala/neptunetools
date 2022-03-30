@@ -45,7 +45,7 @@ class Account(AbstractBaseUser):
     date_joined = models.DateTimeField(verbose_name="date joined", auto_now_add=True)
     date_joined = models.DateTimeField(verbose_name="last login", auto_now=True)
     is_admin = models.BooleanField(default=False)
-    is_active = models.BooleanField(default=True)
+    is_active = models.BooleanField(default=False)
     is_staff = models.BooleanField(default=False)
     is_superuser = models.BooleanField(default=False)
     hide_email = models.BooleanField(default=True)

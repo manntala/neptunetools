@@ -31,7 +31,7 @@
               <form action="{% url 'catalogdisplay' %}" method="post" enctype="multipart/form-data">
                   {% csrf_token %}
                 <div class="form-group mt-3 py-3 pr-4">
-                  <h5>Generate the token to display the orders.</h5>
+                  <h5 class="card-title card-title-dash">Step 1. Input your App Key and Secret Key.</h5>
                     <div class="form-group pt-4">
                         <label for="exampleFormControlFile1">App Key:</label>
                         <input type="text" class="form-control" id="exampleFormControlFile1" name="appkey">

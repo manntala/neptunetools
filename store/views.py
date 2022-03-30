@@ -179,7 +179,7 @@ def storeview(request):
 
             response = requests.request("GET", url, json=payload, headers=headers)
             output = response.json()['response']
-            print(output)
+            
 
             context = {               
                 'response': output,
@@ -188,7 +188,7 @@ def storeview(request):
 
             print(response.text)
             if response.status_code == 200:
-                messages.add_message(request, messages.SUCCESS, 'Success!')
+                messages.add_message(request, messages.SUCCESS, 'Account Platform Status')
                 return render(request, 'store/storeview.html', context)
             else:
                 messages.add_message(request, messages.ERROR, symbol_remove(response.text) + ' Invalid Credentials')

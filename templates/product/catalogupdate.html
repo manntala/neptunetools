@@ -31,7 +31,7 @@
                   <form action="{% url 'uploadproductcatalog' %}" method="post" enctype="multipart/form-data">
                       {% csrf_token %}
                     <div class="form-group mt-3 py-3 pr-4">
-                      <h5>Step 1. Upload your Product Catalog.</h5>
+                      <h5 class="card-title card-title-dash">Step 1. Upload your Product Catalog.</h5>
                         <div class="form-group pt-4">
                            
                             {{ form.product }}
@@ -46,7 +46,7 @@
                   </form>
                   <hr class="mt-5" />  
                   <div class="form-group pt-4">
-                    <h5>Step 2. Update your Product Catalog.</h5>
+                    <h5 class="card-title card-title-dash">Step 2. Update your Product Catalog.</h5>
                     <p></p>
                   </div>
                   <div class="text-end pb-4">

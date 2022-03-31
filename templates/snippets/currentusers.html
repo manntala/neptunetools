@@ -1,0 +1,33 @@
+{% load static %}
+<div class="col-lg-4 d-flex flex-column">
+    <div class="row flex-grow">
+      <div class="col-md-6 col-lg-12 grid-margin stretch-card">
+        <div class="card bg-primary card-rounded">
+          <div class="card-body pb-0">
+            <h4 class="card-title card-title-dash text-white mb-4">Registered Users</h4>
+            <div class="row">
+              <div class="col-sm-4">
+                <p class="status-summary-ight-white mb-1"></p>
+                {% for user in users %}
+                <h4 class="text-info">
+                  {{ user.username }}
+
+                </h4>
+                {% endfor %}
+              </div>
+              <div class="col-sm-8">
+                <div class="status-summary-chart-wrapper pb-4">
+                  <canvas id="status-summary"></canvas>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-6 col-lg-12 grid-margin stretch-card">
+        <div class="card card-rounded">
+          
+        </div>
+      </div>
+    </div>
+  </div>

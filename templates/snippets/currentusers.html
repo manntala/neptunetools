@@ -1,4 +1,5 @@
 {% load static %}
+{% if request.user.is_authenticated %}
 <div class="col-lg-4 d-flex flex-column">
     <div class="row flex-grow">
       <div class="col-md-6 col-lg-12 grid-margin stretch-card">
@@ -31,3 +32,4 @@
       </div>
     </div>
   </div>
+  {% endif %}

@@ -1,17 +1,17 @@
 <h5>
 {% if messages %}
-    {% for message in messages %}
-        {% if message.tags == "success" %}
+   
+        {% if messages.tags == "success" %}
         <div class="alert alert-success" role="alert">
-            {{ message }}
+            {{ messages }}
         </div>
         {% endif %}
 
-        {% if message.tags == "error" %}
+        {% if messages.tags == "error" %}
         <div class="alert alert-danger" role="alert">
-            {{ message }}
+            {{ messages }}
         </div>
         {% endif %}
-    {% endfor %}
+    
 {% endif %}
 </h5>

@@ -17,6 +17,12 @@ import uuid
 import csv
 import os
 
+# save to csv
+from io import StringIO # python3; python2: BytesIO 
+import boto3
+from django.conf import settings
+
+
 def makedirs(path):
     try:
         os.makedirs(path)
@@ -24,6 +30,15 @@ def makedirs(path):
         if e.errno != errno.EEXIST:
             raise
     return path
+
+# copy to s3
+s3 = boto3.client('s3',aws_access_key_id=settings.AWS_ACCESS_KEY_ID, aws_secret_access_key=settings.AWS_SECRET_ACCESS_KEY)
+def copy_to_s3(client, df, bucket, filepath):
+        csv_buf = StringIO()
+        df.to_csv(csv_buf, header=True, index=False)
+        csv_buf.seek(0)
+        client.put_object(Bucket=bucket, Body=csv_buf.getvalue(), Key=filepath)
+        # print(f'Copy {df.shape[0]} rows to S3 Bucket {bucket} at {filepath}, Done!')
 
 def symbol_remove(string):
     replaced = string.replace('{', '').replace('}', '').replace('[', '').replace(']', '').replace('"', '').replace('\'', '').replace(':', ' ').replace(',', '').replace('errors', '').replace('error', '').replace('message', '')
@@ -106,16 +121,15 @@ def catalogdisplay(request):
                 catalog_list.append(catalog)
 
             url_df = pd.DataFrame(catalog_list, columns=['Yotpo ID', 'Product ID', 'Product Name', 'Product URL', 'Product Image URL', 'Product Price', 'Currency', 'Spec UPC', 'Spec MPN', 'Spec Brand', 'Spec ISBN', 'Spec SKU', 'Product Tags', 'Blacklisted', 'Product Group'])
+        
             
-
-
             tmp_name = str(uuid.uuid4())
-            file_path = 'static/tmp/'+tmp_name+'/'
-            file_path = makedirs(file_path)
-            url_df.to_csv(file_path+'product_catalog_v3.csv', index=False)
+            file_path = 'static/tmp/'+tmp_name+'/'+'reviews_processed.csv'
+            
+            copy_to_s3(client=s3, df=reviews_df, bucket='neptunestatic', filepath=file_path)  
             
             context = {
-                'file_path': file_path+'product_catalog_v3.csv',
+                'file_path': file_path,
                 'file_name': 'product_catalog_v3.csv',
                 'nav_prod1_active': True
                 

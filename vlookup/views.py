@@ -18,6 +18,11 @@ import os
 import requests
 import json
 
+# save to csv
+from io import StringIO # python3; python2: BytesIO 
+import boto3
+from django.conf import settings
+
 
 def makedirs(path):
     try:
@@ -31,6 +36,14 @@ def makedirs(path):
 fs = FileSystemStorage(location='tmp/')
 pc = uuid.uuid4()
 
+# copy to s3
+s3 = boto3.client('s3',aws_access_key_id=settings.AWS_ACCESS_KEY_ID, aws_secret_access_key=settings.AWS_SECRET_ACCESS_KEY)
+def copy_to_s3(client, df, bucket, filepath):
+        csv_buf = StringIO()
+        df.to_csv(csv_buf, header=True, index=False)
+        csv_buf.seek(0)
+        client.put_object(Bucket=bucket, Body=csv_buf.getvalue(), Key=filepath)
+        # print(f'Copy {df.shape[0]} rows to S3 Bucket {bucket} at {filepath}, Done!')
 
 @login_required
 def uploadcatalog(request):
@@ -203,14 +216,14 @@ def vlookup(request):
                     reviews_df.at[row_number, 'product_id'] = row[0]
                     reviews_df.at[row_number, 'product_url'] = row[2]
                     reviews_df.at[row_number, 'product_image_url'] = row[3]
-        
+
         tmp_name = str(uuid.uuid4())
-        file_path = 'static/tmp/'+tmp_name+'/'
-        file_path = makedirs(file_path)
-        reviews_df.to_csv(file_path+'reviews_processed.csv', index=False)
+        file_path = 'static/tmp/'+tmp_name+'/'+'reviews_processed.csv'
         
+        copy_to_s3(client=s3, df=reviews_df, bucket='neptunestatic', filepath=file_path)  
+ 
         context = {
-            'file_path': file_path+'reviews_processed.csv',
+            'file_path': file_path,
             'file_name': 'reviews_processed.csv',
         }
         messages.add_message(request, messages.SUCCESS, 'Processing done!')
@@ -372,13 +385,12 @@ def shopifyscraper(request):
                             
                 
                 tmp_name = str(uuid.uuid4())
-                file_path = 'static/tmp/'+tmp_name+'/'
-                file_path = makedirs(file_path)
-                reviews_df.to_csv(file_path+'reviews_processed.csv', index=False)
+                file_path = 'static/tmp/'+tmp_name+'/'+'reviews_processed.csv'
                 
+                copy_to_s3(client=s3, df=reviews_df, bucket='neptunestatic', filepath=file_path)  
+
                 context = {
-                    'file_path': file_path+'reviews_processed.csv',
-                    'file_name': 'reviews_processed.csv',
+                    'file_path': file_path,
                     'form' : UploadScraperForm(),
                     'nav_shopify_active' : nav_shopify_active
                 }

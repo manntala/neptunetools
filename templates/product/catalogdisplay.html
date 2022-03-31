@@ -50,11 +50,11 @@
               {% if messages %}
               <hr class="mt-5" />
             <div class="form-group mt-4">
-              <h5>Step 2. Download the CSV.</h5>
+              <h5 class="card-title card-title-dash">Step 2. Download the CSV.</h5>
               <p>If there are empty fields, please check the product title on your Import File.</p>
             </div>
             <div class="text-end pb-4">
-            <a href="../../{{file_path}}" download="product_catalog_v3.csv" class="btn btn-success" style="width: 150px;">Download CSV</a></div>
+            <a href="https://neptunestatic.s3.amazonaws.com/{{file_path}}" download="product_catalog_v3.csv" class="btn btn-success" style="width: 150px;">Download CSV</a></div>
             
             {% endif %}
                 </div>

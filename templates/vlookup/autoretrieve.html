@@ -45,10 +45,10 @@
                   <div class="text-end pb-4 pt-4">
                    
                     <button type="submit" class="btn btn-primary" style="width: 150px;">Upload CSVs</button>
-                    <a href="{% url 'resetform' %}" class="btn btn-secondary pl-4" style="width: 150px;">Reset Form</a></div>
+                    <a href="{% url 'resetautoretrieve' %}" class="btn btn-secondary pl-4" style="width: 150px;">Reset Form</a></div>
                   
                   </form>
-                  {% if messages %}
+                  {% if file_path %}
                   <hr />
                   <div class="form-group">
                     <h5 class="card-title card-title-dash">Step 2. Download the CSV.</h5>

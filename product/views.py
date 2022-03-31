@@ -6,7 +6,7 @@ from django.contrib.auth.decorators import login_required
 
 from order.models import GetKey
 from .models import UpdateProductModel, UploadCsvModel, AddProductModel
-from .forms import UploadCsvModelForm
+from .forms import UploadCsvModelForm, GetKeyForm
 
 from .serializers import UpdateProductModelSerializer, AddProductModelSerializer
 
@@ -46,27 +46,31 @@ def symbol_remove(string):
 
 @login_required
 def catalogdisplay(request):
+    context = {
+        'nav_prod1_active': True,
+        'keyform': GetKeyForm(),
+    }
+
     if request.method == 'POST':
-        appkey = request.POST.get('appkey')
-        secretkey = request.POST.get('secretkey')
-        
-        payload = {
+        keyform = GetKeyForm(request.POST)
+
+        if keyform.is_valid():
+            appkey = keyform.cleaned_data['appkey']
+            secretkey = keyform.cleaned_data['secretkey']
+
+            payload = {
             "client_id": appkey,
             "client_secret": secretkey,
             "grant_type": "client_credentials"
-        }
+            }
 
-        headers = {
-            "Accept": "application/json",
-            "Content-Type": "application/json"
-        }
-        url = 'https://api.yotpo.com/oauth/token'
-        response = requests.request("GET", url=url, json=payload, headers=headers)
-        utoken = response.json()['access_token']
-        context = {
-            'utoken': response.json()['access_token']
-            }       
-        messages.add_message(request, messages.INFO, f'Token: '+utoken)
+            headers = {
+                "Accept": "application/json",
+                "Content-Type": "application/json"
+            }
+            url = 'https://api.yotpo.com/oauth/token'
+            response = requests.request("GET", url=url, json=payload, headers=headers)
+            utoken = response.json()['access_token']
         
         if utoken:
             url = f"https://api.yotpo.com/core/v3/stores/{appkey}/products"
@@ -124,11 +128,12 @@ def catalogdisplay(request):
         
             
             tmp_name = str(uuid.uuid4())
-            file_path = 'static/tmp/'+tmp_name+'/'+'reviews_processed.csv'
+            file_path = 'static/tmp/'+tmp_name+'/'+'product_catalog.csv'
             
-            copy_to_s3(client=s3, df=reviews_df, bucket='neptunestatic', filepath=file_path)  
+            copy_to_s3(client=s3, df=url_df, bucket='neptunestatic', filepath=file_path)  
             
             context = {
+                'keyform': GetKeyForm(),
                 'file_path': file_path,
                 'file_name': 'product_catalog_v3.csv',
                 'nav_prod1_active': True
@@ -143,7 +148,7 @@ def catalogdisplay(request):
             return redirect(to='catalogdisplay')
 
     # messages.add_message(request, messages.ERROR, 'Invalid!')
-    return render(request, 'product/catalogdisplay.html', {'nav_prod1_active': True})
+    return render(request, 'product/catalogdisplay.html', context)
 
 @login_required
 def createproduct(request):
@@ -179,9 +184,20 @@ def createproduct(request):
 def resetproduct(request):
     form =  UploadCsvModelForm()
     context = {
-    'form' : form
+    'form' : form,
+    'file_path': '',
     }
-    return render(request, "product/updateproduct.html", context)
+    return render(request, "product/catalogupdate.html", context)
+
+@login_required
+def resetproductdisplay(request):
+    keyform =  GetKeyForm()
+    context = {
+        'nav_prod1_active': True,
+        'keyform' : keyform,
+        'file_path': '',
+    }
+    return render(request, "product/catalogdisplay.html", context)
 
 @login_required
 def uploadproductcatalog(request):

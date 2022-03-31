@@ -285,12 +285,12 @@ def autoretrieve(request):
                 #         reviews_df.at[row_number, 'product_image_url'] = row[3]
             
             tmp_name = str(uuid.uuid4())
-            file_path = 'static/tmp/'+tmp_name+'/'
-            file_path = makedirs(file_path)
-            reviews_df.to_csv(file_path+'reviews_processed.csv', index=False)
+
+            file_path = 'static/tmp/'+tmp_name+'/'+'reviews_processed.csv'
+            copy_to_s3(client=s3, df=reviews_df, bucket='neptunestatic', filepath=file_path) 
             
             context = {
-                'file_path': file_path+'reviews_processed.csv',
+                'file_path': file_path,
                 'file_name': 'reviews_processed.csv',
                 'form' : form,
                 'nav_vlookup_active' : nav_vlookup_active,
@@ -311,15 +311,28 @@ def autoretrieve(request):
 def resetform(request):
     form =  UploadDataForm()
     context = {
-    'form' : form
+    'form' : form,
+    'file_path': '',
     }
     return render(request, "vlookup/vlookup.html", context)
+
+@login_required
+def resetautoretrieve(request):
+    form =  UploadDataForm()
+    context = {
+        'nav_vlookup_active' : True,
+        'form' : form,
+        'file_path': '',
+    }
+    return render(request, "vlookup/autoretrieve.html", context)
 
 @login_required
 def resetscraperform(request):
     form =  UploadScraperForm()
     context = {
-    'form' : form
+        'nav_shopify_active' : nav_shopify_active,
+        'form' : form,
+        'file_path': '',
     }
     return render(request, "vlookup/shopifyscraper.html", context)
 

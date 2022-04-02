@@ -4,6 +4,7 @@ from django.contrib import messages
 import requests
 
 from .forms import GetKeyForm, GetKeyForm2
+from dashboard.views import getkey
 
 def symbol_remove(string):
     replaced = string.replace('{', '').replace('}', '').replace('[', '').replace(']', '').replace('"', '').replace('\'', '').replace(':', ' ').replace(',', '').replace('errors', '').replace('error', '').replace('message', '')
@@ -23,22 +24,9 @@ def removetoken(request):
             appkey = form.cleaned_data['appkey']
             secretkey = form.cleaned_data['secretkey']
 
-            payload = {
-            "client_id": appkey,
-            "client_secret": secretkey,
-            "grant_type": "client_credentials"
-            }
-
-            headers = {
-                "Accept": "application/json",
-                "Content-Type": "application/json"
-            }
-            url = 'https://api.yotpo.com/oauth/token'
-            response = requests.request("GET", url=url, json=payload, headers=headers)
-            utoken = response.json()['access_token']
+            utoken = getkey(request, appkey, secretkey)
 
             context = {
-                'utoken': response.json()['access_token'],
                 'nav_store1_active': True,
                 }      
 
@@ -52,7 +40,7 @@ def removetoken(request):
                         },
                     "utoken": utoken
                     }
-                    
+                     
             headers = {
                 "Accept": "application/json",
                 "Content-Type": "application/json"
@@ -62,7 +50,7 @@ def removetoken(request):
 
             print(response.text)
             if response.status_code == 200:
-                messages.add_message(request, messages.SUCCESS, symbol_remove(response.text) + ' Token Removed!')
+                messages.add_message(request, messages.SUCCESS, ' Token Removed!')
                 return render(request, 'store/removetoken.html', context)
             else:
                 messages.add_message(request, messages.ERROR, symbol_remove(response.text) + ' Invalid Credentials')
@@ -88,22 +76,9 @@ def addtoken(request):
             shop_token = request.POST.get('shop_token')
             shop_domain = request.POST.get('shop_domain')
 
-            payload = {
-            "client_id": appkey,
-            "client_secret": secretkey,
-            "grant_type": "client_credentials"
-            }
-
-            headers = {
-                "Accept": "application/json",
-                "Content-Type": "application/json"
-            }
-            url = 'https://api.yotpo.com/oauth/token'
-            response = requests.request("GET", url=url, json=payload, headers=headers)
-            utoken = response.json()['access_token']
+            utoken = getkey(request, appkey, secretkey)
 
             context = {
-                'utoken': response.json()['access_token'],
                 'nav_addtoken_active': True,
                 }      
 
@@ -126,7 +101,7 @@ def addtoken(request):
 
             print(response.text)
             if response.status_code == 200:
-                messages.add_message(request, messages.SUCCESS, symbol_remove(response.text) + ' Shop Token and Domain Updated')
+                messages.add_message(request, messages.SUCCESS, ' Shop Token and Domain Updated')
                 return render(request, 'store/addtoken.html', context)
             else:
                 messages.add_message(request, messages.ERROR, symbol_remove(response.text) + ' Invalid Credentials')
@@ -147,24 +122,8 @@ def storeview(request):
             appkey = form.cleaned_data['appkey']
             secretkey = form.cleaned_data['secretkey']
 
-            payload = {
-            "client_id": appkey,
-            "client_secret": secretkey,
-            "grant_type": "client_credentials"
-            }
-
-            headers = {
-                "Accept": "application/json",
-                "Content-Type": "application/json"
-            }
-            url = 'https://api.yotpo.com/oauth/token'
-            response = requests.request("GET", url=url, json=payload, headers=headers)
-            utoken = response.json()['access_token']
-
-            context = {
-                'utoken': response.json()['access_token'],
-                }      
-
+            utoken = getkey(request, appkey, secretkey)
+   
             url = f"https://api.yotpo.com/apps/{appkey}/account_platform"
 
             payload = {
@@ -186,7 +145,6 @@ def storeview(request):
                 'nav_store2_active': True
             }
 
-            print(response.text)
             if response.status_code == 200:
                 messages.add_message(request, messages.SUCCESS, 'Account Platform Status')
                 return render(request, 'store/storeview.html', context)

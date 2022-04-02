@@ -28,13 +28,18 @@
                   {% endif %}
                 </div>
       
-                  <form action="{% url 'uploadproductcatalog' %}" method="post" enctype="multipart/form-data">
+                  <form action="{% url 'catalogupdate' %}" method="post" enctype="multipart/form-data">
                       {% csrf_token %}
                     <div class="form-group mt-3 py-3 pr-4">
                       <h5 class="card-title card-title-dash">Step 1. Upload your Product Catalog.</h5>
                         <div class="form-group pt-4">
-                           
-                            {{ form.product }}
+                           <label for="id_productcatalog">Product Catalog:</label>
+                            {{ form.productcatalog }}
+                            <label class="mt-4" for="id_appkey">App Key</label>
+                            {{ form.appkey }}
+                            <label for="id_secretkey">Secret Key</label>
+                            {{ form.secretkey }}
+                            
                         </div>
                         
                     </div>
@@ -44,16 +49,15 @@
                       <a href="{% url 'resetproduct' %}" class="btn btn-secondary" style="width: 150px;">Reset</a></div>
                     <div class="text-end pb-4"></div>
                   </form>
-                  <hr class="mt-5" />  
-                  <div class="form-group pt-4">
-                    <h5 class="card-title card-title-dash">Step 2. Update your Product Catalog.</h5>
-                    <p></p>
+                  <hr class="mt-5" />
+                 
+                  
+                  <div class="form-group mt-3 py-3 pr-4">
+                    
+                      
+                      
                   </div>
-                  <div class="text-end pb-4">
-                    <form action="{% url 'catalogupdate' %}" method="post" enctype="multipart/form-data">
-                      {% csrf_token %}
-                    <button type="submit" class="btn btn-primary" style="width: 150px; margin-right: 10px;">Update</button>
-                  </form>
+                  <div class="text-end pb-4">          
                 </div>
                 </div>
                 <!-- end -->

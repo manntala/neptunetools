@@ -17,5 +17,13 @@ class GetKeyForm(forms.Form):
     class Meta:
         fields = ('appkey', 'secretkey',)
 
+class UploadProductCatalogForm(forms.Form):
+    productcatalog = forms.FileField(widget=forms.FileInput(attrs={'placeholder':'Upload Product Catalog', 'accept':'.csv', 'class':'form-control', 'onchange':'triggerValidation(this)'}))
+    appkey = forms.CharField(widget=forms.TextInput(attrs={'placeholder':'', 'class':'form-control', }))
+    secretkey = forms.CharField(widget=forms.TextInput(attrs={'placeholder':'', 'class':'form-control', }))
+
+    class Meta:
+        fields = ('productcatalog', 'appkey', 'secretkey',)
+
 
  

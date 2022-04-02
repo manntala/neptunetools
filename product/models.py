@@ -17,7 +17,7 @@ class UpdateProductModel(models.Model):
     product_title = models.CharField(max_length=100, blank=True, null=True)
     product_url = models.CharField(max_length=100, blank=True, null=True)
     product_image_url = models.CharField(max_length=100, blank=True, null=True)
-    product_price = models.IntegerField(blank=True, null=True)
+    product_price = models.IntegerField(default=0, blank=True, null=True)
     product_currency = models.CharField(max_length=100, blank=True, null=True)
     upc = models.CharField(max_length=100, blank=True, null=True)
     mpn = models.CharField(max_length=100, blank=True, null=True)

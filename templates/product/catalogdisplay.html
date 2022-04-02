@@ -21,11 +21,7 @@
             <div class="form-group px-4">
                
               <div class="sent-message text-success">
-                {% if messages %}
-              {% for message in messages %}
-              <small>{{ message | upper }}</small><br />
-              {% endfor %}
-              {% endif %}
+                {% include 'snippets/messages.html' %}
             </div>
   
               <form action="{% url 'catalogdisplay' %}" method="post" enctype="multipart/form-data">

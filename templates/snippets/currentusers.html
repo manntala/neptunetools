@@ -1,8 +1,8 @@
 {% load static %}
 {% if request.user.is_authenticated %}
-<div class="col-lg-4 d-flex flex-column vh-100">
+<div class="col-lg-4 d-flex flex-column">
     <div class="row flex-grow">
-      <div class="col-md-6 col-lg-12 grid-margin">
+      <div class="col-md-6 col-lg-12 grid-margin stretch-card">
         <div class="card bg-primary card-rounded">
           <div class="card-body pb-0">
             <h4 class="card-title card-title-dash text-white mb-4">Registered Users</h4>
@@ -10,9 +10,10 @@
               <div class="col-sm-4">
                 <p class="status-summary-ight-white mb-1"></p>
                 {% for user in users %}
-                <h5 class="text-info">
+                <h4 class="text-info">
                   {{ user.username | lower }}
-                </h5>
+
+                </h4>
                 {% endfor %}
               </div>
               <div class="col-sm-8">

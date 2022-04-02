@@ -391,8 +391,6 @@ def catalogupdate(request):
     
     return render(request, 'product/catalogupdate.html', context)
 
-    return render(request, 'product/catalogupdate.html', context)
-
 
 @login_required
 def catalogadd(request):

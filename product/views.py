@@ -8,6 +8,8 @@ from order.models import GetKey
 from .models import UpdateProductModel, UploadCsvModel, AddProductModel
 from .forms import UploadCsvModelForm, GetKeyForm
 
+from dashboard.views import getkey
+
 from .serializers import UpdateProductModelSerializer, AddProductModelSerializer
 
 import requests
@@ -58,94 +60,82 @@ def catalogdisplay(request):
             appkey = keyform.cleaned_data['appkey']
             secretkey = keyform.cleaned_data['secretkey']
 
-            payload = {
-            "client_id": appkey,
-            "client_secret": secretkey,
-            "grant_type": "client_credentials"
-            }
-
-            headers = {
-                "Accept": "application/json",
-                "Content-Type": "application/json"
-            }
-            url = 'https://api.yotpo.com/oauth/token'
-            response = requests.request("GET", url=url, json=payload, headers=headers)
-            utoken = response.json()['access_token']
+            utoken = getkey(request, appkey, secretkey)
         
-        if utoken:
-            url = f"https://api.yotpo.com/core/v3/stores/{appkey}/products"
-            
-
-            headers = {
-                "X-Yotpo-Token": f"{utoken}",
-                "Accept": "application/json",
-                "Content-Type": "application/json"
-            }
-            response = requests.request("GET", url=url, headers=headers)
-            data = response.json()
-            
-
-            catalog_list = []
-            for item in data['products']:
-
-                yotpo_id = item['yotpo_id']
-                product_id = item['external_id']
-                product_name = item['name']
-                product_url = item['url']
-                product_image_url = item['image_url']
-                product_price = item['price']
-                product_currency = item['currency']
-                product_mpn = item['mpn']
-                product_brand = item['brand']
-                # product_isbn = item['isbn']
-                # product_upc = item['gtins']
-                product_sku = item['sku']
-                # product_tags = item['tags']
-                product_blacklisted = item['is_discontinued']
-                product_group = item['group_name']
+            if utoken:
+                url = f"https://api.yotpo.com/core/v3/stores/{appkey}/products"
                 
 
-                catalog = {
-                    'Yotpo ID': yotpo_id,
-                    'Product ID': product_id,
-                    'Product Name': product_name,
-                    'Product URL': product_url,
-                    'Product Image URL': product_image_url,
-                    'Product Price': product_price,
-                    'Currency': product_currency,
-                    # 'Spec UPC': product_upc,
-                    'Spec MPN': product_mpn,
-                    'Spec Brand': product_brand,
-                    # 'Spec ISBN': product_isbn,
-                    'Spec SKU': product_sku,
-                    # 'Product Tags': product_tags,
-                    'Blacklisted': product_blacklisted,
-                    'Product Group': product_group 
+                headers = {
+                    "X-Yotpo-Token": f"{utoken}",
+                    "Accept": "application/json",
+                    "Content-Type": "application/json"
                 }
-                catalog_list.append(catalog)
-
-            url_df = pd.DataFrame(catalog_list, columns=['Yotpo ID', 'Product ID', 'Product Name', 'Product URL', 'Product Image URL', 'Product Price', 'Currency', 'Spec UPC', 'Spec MPN', 'Spec Brand', 'Spec ISBN', 'Spec SKU', 'Product Tags', 'Blacklisted', 'Product Group'])
-        
-            
-            tmp_name = str(uuid.uuid4())
-            file_path = 'static/tmp/'+tmp_name+'/'+'product_catalog.csv'
-            
-            copy_to_s3(client=s3, df=url_df, bucket='neptunestatic', filepath=file_path)  
-            
-            context = {
-                'keyform': GetKeyForm(),
-                'file_path': file_path,
-                'file_name': 'product_catalog_v3.csv',
-                'nav_prod1_active': True
+                response = requests.request("GET", url=url, headers=headers)
+                data = response.json()
                 
-            }
 
-            messages.add_message(request, messages.INFO, 'Product Catalog Downloaded!')
-            return render(request, 'product/catalogdisplay.html', context)
+                catalog_list = []
+                for item in data['products']:
+
+                    yotpo_id = item['yotpo_id']
+                    product_id = item['external_id']
+                    product_name = item['name']
+                    product_url = item['url']
+                    product_image_url = item['image_url']
+                    product_price = item['price']
+                    product_currency = item['currency']
+                    product_mpn = item['mpn']
+                    product_brand = item['brand']
+                    # product_isbn = item['isbn']
+                    # product_upc = item['gtins']
+                    product_sku = item['sku']
+                    # product_tags = item['tags']
+                    product_blacklisted = item['is_discontinued']
+                    product_group = item['group_name']
+                    
+
+                    catalog = {
+                        'Yotpo ID': yotpo_id,
+                        'Product ID': product_id,
+                        'Product Name': product_name,
+                        'Product URL': product_url,
+                        'Product Image URL': product_image_url,
+                        'Product Price': product_price,
+                        'Currency': product_currency,
+                        # 'Spec UPC': product_upc,
+                        'Spec MPN': product_mpn,
+                        'Spec Brand': product_brand,
+                        # 'Spec ISBN': product_isbn,
+                        'Spec SKU': product_sku,
+                        # 'Product Tags': product_tags,
+                        'Blacklisted': product_blacklisted,
+                        'Product Group': product_group 
+                    }
+                    catalog_list.append(catalog)
+
+                url_df = pd.DataFrame(catalog_list, columns=['Yotpo ID', 'Product ID', 'Product Name', 'Product URL', 'Product Image URL', 'Product Price', 'Currency', 'Spec UPC', 'Spec MPN', 'Spec Brand', 'Spec ISBN', 'Spec SKU', 'Product Tags', 'Blacklisted', 'Product Group'])
+            
+                
+                tmp_name = str(uuid.uuid4())
+                file_path = 'static/tmp/'+tmp_name+'/'+'product_catalog.csv'
+                
+                copy_to_s3(client=s3, df=url_df, bucket='neptunestatic', filepath=file_path)  
+                
+                context = {
+                    'keyform': GetKeyForm(),
+                    'file_path': file_path,
+                    'file_name': 'product_catalog_v3.csv',
+                    'nav_prod1_active': True
+                    
+                }
+
+                messages.add_message(request, messages.INFO, 'Product Catalog Downloaded!')
+                return render(request, 'product/catalogdisplay.html', context)
         
-        else:
-            messages.add_message(request, messages.ERROR, 'Invalid Token!')
-            return redirect(to='catalogdisplay')
+            else:
+                messages.add_message(request, messages.ERROR, 'Invalid Token!')
+                return redirect(to='catalogdisplay')
 
     # messages.add_message(request, messages.ERROR, 'Invalid!')
     return render(request, 'product/catalogdisplay.html', context)

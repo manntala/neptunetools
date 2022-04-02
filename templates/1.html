@@ -1,0 +1,10 @@
+<script type=" text/javascript">//<![DATA[
+    var div = document.createElement("div");
+    div.setAttribute('class', 'yotpo yotpo-main-widget');
+    div.setAttribute('data-product-id', "{{product.id}}");
+    div.setAttribute('data-name', "{{product.title}}");
+    div.setAttribute('data-url', "{{settings.base_url{{product.url}}");
+    div.setAttribute('data-image-url', {{getImage product.main_image 'product'}});
+    document.querySelectorAll('.productView')[0].appendChild(div);
+    //]]>
+    </script>

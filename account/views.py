@@ -13,7 +13,6 @@ def registration_view(request):
     if request.user.is_authenticated: 
         return redirect(to='dashboard')
     
-
     context = {
         'form': RegistrationForm(request.POST)
     }
@@ -61,7 +60,6 @@ def login_view(request):
     
     if request.POST:
         form = AccountAuthenticationForm(request.POST)
-        print(form)
         if form.is_valid():
             email = request.POST['email']
             password = request.POST['password']

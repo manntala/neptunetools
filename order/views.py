@@ -37,6 +37,8 @@ from django.contrib.auth.models import User
 from .serializers import UserSerializer, RegisterSerializer, LoginSerializer, OrderProcessSerializer
 from .models import OrderProcessModel, OrderTemplate
 
+from dashboard.views import getkey
+
 from django.core.files.storage import default_storage as storage
 
 import pandas as pd 
@@ -183,19 +185,7 @@ def send(request):
             appkey = keyform.cleaned_data['appkey']
             secretkey = keyform.cleaned_data['secretkey']
 
-            payload = {
-            "client_id": appkey,
-            "client_secret": secretkey,
-            "grant_type": "client_credentials"
-            }
-
-            headers = {
-                "Accept": "application/json",
-                "Content-Type": "application/json"
-            }
-            url = 'https://api.yotpo.com/oauth/token'
-            response = requests.request("GET", url=url, json=payload, headers=headers)
-            utoken = response.json()['access_token']
+            getkey(secret, appkey, secretkey)
         
             if utoken:
                 order_processes = OrderProcessModel.objects.filter(owner=request.user).filter(sent=False)
@@ -299,21 +289,7 @@ def display(request):
             appkey = keyform.cleaned_data['appkey']
             secretkey = keyform.cleaned_data['secretkey']
 
-            print(appkey, secretkey)
-
-            payload = {
-            "client_id": appkey,
-            "client_secret": secretkey,
-            "grant_type": "client_credentials"
-            }
-
-            headers = {
-                "Accept": "application/json",
-                "Content-Type": "application/json"
-            }
-            url = 'https://api.yotpo.com/oauth/token'
-            response = requests.request("GET", url=url, json=payload, headers=headers)
-            utoken = response.json()['access_token']
+            utoken = getkey(request, appkey, secretkey)
        
             if utoken:
                 url = f"https://api.yotpo.com/core/v3/stores/{appkey}/orders"
@@ -348,7 +324,7 @@ def display(request):
 
 @login_required
 def displayid(request, id):
-    key = GetKey.objects.filter(owner=request.user).filter(active=True)
+    
     order_id = id
 
     if key:
@@ -357,21 +333,7 @@ def displayid(request, id):
             appkey = key[0].appkey
             secretkey = key[0].secretkey
 
-            HttpResponse(appkey, secretkey)
-            
-            payload = {
-                "client_id": appkey,
-                "client_secret": secretkey,
-                "grant_type": "client_credentials"
-            }
-
-            headers = {
-                "Accept": "application/json",
-                "Content-Type": "application/json"
-            }
-            url = 'https://api.yotpo.com/oauth/token'
-            response = requests.request("GET", url=url, json=payload, headers=headers)
-            utoken = response.json()['access_token']
+            utoken = getkey(request, appkey, secretkey)
 
             if utoken:
                 url = f"https://api.yotpo.com/core/v3/stores/{appkey}/orders/{order_id}"
@@ -396,103 +358,6 @@ def displayid(request, id):
     
     return redirect('displayid', id)
 
-@login_required
-def view_catalog(request):
-    if request.method == 'POST':
-        appkey = request.POST.get('appkey')
-        secretkey = request.POST.get('secretkey')
-        
-        payload = {
-            "client_id": appkey,
-            "client_secret": secretkey,
-            "grant_type": "client_credentials"
-        }
-
-        headers = {
-            "Accept": "application/json",
-            "Content-Type": "application/json"
-        }
-        url = 'https://api.yotpo.com/oauth/token'
-        response = requests.request("GET", url=url, json=payload, headers=headers)
-        utoken = response.json()['access_token']
-        context = {
-            'utoken': response.json()['access_token']
-            }       
-        messages.add_message(request, messages.INFO, f'Token: '+utoken)
-        
-        if utoken:
-            url = f"https://api.yotpo.com/core/v3/stores/{appkey}/products"
-
-            headers = {
-                "X-Yotpo-Token": f"{utoken}",
-                "Accept": "application/json",
-                "Content-Type": "application/json"
-            }
-            response = requests.request("GET", url=url, headers=headers)
-            data = response.json()['products']
-            
-
-            product_list = []
-            for item in data:
-                
-                product_id = data[0]['external_id']
-                product_name = data[0]['name']
-                product_url = data[0]['url']
-                product_image_url = data[0]['image_url']
-                product_price = data[0]['price']
-                product_currency = data[0]['currency']
-                product_mpn = data[0]['mpn']
-                product_brand = data[0]['brand']
-                # product_isbn = data[0]['isbn']
-                product_upc = data[0]['gtins']
-                product_sku = data[0]['sku']
-                # product_tags = data[0]['tags']
-                product_blacklisted = data[0]['is_discontinued']
-                product_group = data[0]['group_name']
-                
-
-                products = {
-                    'Product ID': product_id,
-                    'Product Name': product_name,
-                    'Product URL': product_url,
-                    'Product Image URL': product_image_url,
-                    'Product Price': product_price,
-                    'Currency': product_currency,
-                    'Spec UPC': product_upc,
-                    'Spec MPN': product_mpn,
-                    'Spec Brand': product_brand,
-                    # 'Spec ISBN': product_isbn,
-                    'Spec SKU': product_sku,
-                    # 'Product Tags': product_tags,
-                    'Blacklisted': product_blacklisted,
-                    'Product Group': product_group 
-                }
-                product_list.append(products)
-
-            url_df = pd.DataFrame(product_list, columns=['Product ID', 'Product Name', 'Product URL', 'Product Image URL', 'Product Price', 'Currency', 'Spec UPC', 'Spec MPN', 'Spec Brand', 'Spec ISBN', 'Spec SKU', 'Product Tags', 'Blacklisted', 'Product Group'])
-            
-
-
-            tmp_name = str(uuid.uuid4())
-            file_path = 'static/tmp/'+tmp_name+'/'
-            file_path = makedirs(file_path)
-            url_df.to_csv(file_path+'product_catalog_v3.csv', index=False)
-            
-            context = {
-                'file_path': file_path+'product_catalog_v3.csv',
-                'file_name': 'product_catalog_v3.csv',
-                
-            }
-
-            messages.add_message(request, messages.INFO, 'Product Catalog Downloaded!')
-            return render(request, 'order/view_catalog.html', context)
-        
-        else:
-            messages.add_message(request, messages.ERROR, 'Invalid Token!')
-            return redirect('/view-catalog/#view-catalog')
-
-    
-    return render(request, 'order/view_catalog.html')
 
 @login_required     
 def gettoken(request):

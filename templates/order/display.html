@@ -1,6 +1,6 @@
 {% extends 'partials/base.html' %}
 {% load static %}
-{% block title %}View Orders | Neptune{% endblock title %}
+{% block title %}Display Orders | Neptune{% endblock title %}
 
 {% block content %}
 <div class="col-lg-8 d-flex flex-column">
@@ -9,72 +9,67 @@
         <div class="card card-rounded">
           <div class="card-body">
             <div class="d-sm-flex justify-content-between align-items-start">
-              <div class="px-4 mt-4">
-               <h4 class="card-title card-title-dash">DISPLAY ORDERS APIv3</h4>
+              <div class="form-group px-4">
+                <br />
+                <h4 class="card-title card-title-dash">DISPLAY ORDERS APIv3</h4>
                <h5 class="card-subtitle card-subtitle-dash">This tool will retrieve all orders in your account using APIv3.</h5>
+               
               </div>
               <div id="performance-line-legend">
               </div>
             </div>
             <!-- start -->
-            <div class="form-group px-4 mt-2">
-                <div class="sent-message text-success">
-                    {% include 'snippets/messages.html' %}
-                  </div> 
-                  
-                  <form method="post" action="{% url 'display' %}">
+            <div class="form-group px-4">
+               <form method="post" action="{% url 'display' %}">
                     {% csrf_token %}
                   <div class="form-group mt-3 py-3 pr-4">
-                    <h5 class="card-title card-title-dash">Step 1. Input your App key and Secret Key.</h5>
-                    <div class="form-group pt-4">
-                      <label for="exampleFormControlFile1">App Key:</label>
-                      {{ keyform.appkey }}
-                    </div>
-                    <div class="form-group">
-                      <label for="exampleFormControlFile1">Secret Key:</label>
-                      {{ keyform.secretkey }}
-                    </div>
-                    <div class="text-end pb-4">
-                      <button type="submit" class="btn btn-primary btn-icon-text" style="width: 150px;">View Orders</button>
-                      <button type="reset" class="btn btn-secondary btn-icon-text" style="width: 150px;">Reset</button>
-                    
-                    </div>
-                  </form>
+                    <h5></h5>
+                      <div class="form-group">
+                         <label for="exampleFormControlFile1">App Key:</label>
+                         {{ keyform.appkey }}
+                      </div>
+                      <div class="form-group">
+                          <label for="exampleFormControlFile1">Secret Key:</label>
+                          {{ keyform.secretkey }}
+                      </div>
+                  </div>
+                  <div class="text-end pb-4"><button type="submit" class="btn btn-primary" style="width: 150px;">View Orders</button></div>
+              </form>
 
-                  <div class="row mt-5">
+                <div class="row mt-5">
                     <div>
-                        {% if orders %}
+                      {% if orders %}
                        
-                        <table class="table table-striped">
-                            <thead>
-                                <tr>
-                                    <th scope="col">Order ID</th>
-                                    <th scope="col">Yotpo ID</th>
-                                    <th scope="col">Order Date</th>
-                                    <th scope="col">Customer Email</th>
-                                    <th scope="col">First Name</th>
-                                    <th scope="col">Last Name</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {% for order in orders %}
-                                <tr>
-                                    <td>{{order.external_id}}</td>
-                                    <td><a href="{% url 'displayid' order.yotpo_id %}?appkey={{appkey}}&secretkey={{secretkey}}">{{order.yotpo_id}}</a></td>
-                                    <td>{{order.order_date}}</td>
-                                    <td>{{order.customer.email}}</td>
-                                    <td>{{order.customer.first_name}}</td>
-                                    <td>{{order.customer.last_name}}</td>
-                                </tr>
-                                {% endfor %}
-                            </tbody>
-                            </table>
-                            
-                            {% endif %}
+                      <table class="table table-striped">
+                          <thead>
+                              <tr>
+                                  <th scope="col">Order ID</th>
+                                  <th scope="col">Yotpo ID</th>
+                                  <th scope="col">Order Date</th>
+                                  <th scope="col">Customer Email</th>
+                                  <th scope="col">First Name</th>
+                                  <th scope="col">Last Name</th>
+                              </tr>
+                          </thead>
+                          <tbody>
+                              {% for order in orders %}
+                              <tr>
+                                  <td>{{order.external_id}}</td>
+                                  <td>{{order.yotpo_id}}</td>
+                                  <td>{{order.order_date}}</td>
+                                  <td>{{order.customer.email}}</td>
+                                  <td>{{order.customer.first_name}}</td>
+                                  <td>{{order.customer.last_name}}</td>
+                              </tr>
+                              {% endfor %}
+                          </tbody>
+                          </table>
+                          
+                          {% endif %}
                     </div>
                   </div>
                 
-            </div>
+                </div>
                 <!-- end -->
           </div>
         </div>

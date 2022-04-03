@@ -14,6 +14,7 @@ from .serializers import UpdateProductModelSerializer, AddProductModelSerializer
 
 import requests
 import pandas as pd 
+import numpy as np
 import json
 import uuid
 import csv
@@ -185,6 +186,15 @@ def resetproduct(request):
     return render(request, "product/catalogupdate.html", context)
 
 @login_required
+def resetaddproduct(request):
+
+    context = {
+    'form' : UploadProductCatalogForm(),
+    'file_path': '',
+    }
+    return render(request, "product/catalogadd.html", context)
+
+@login_required
 def resetproductdisplay(request):
     keyform =  GetKeyForm()
     context = {
@@ -301,17 +311,20 @@ def catalogupdate(request):
             products = form.cleaned_data['productcatalog']
 
             products_df = pd.read_csv(products)
+            products_df = products_df.fillna({'Spec UPC': 'Null'})
+            products_df = products_df.fillna({'Blacklisted': 'False'})
+            products_df.fillna('', inplace=True)
+
 
             for i, row in products_df.iterrows():
-
-
+                
                 UpdateProductModel.objects.create(
                     yotpo_id=row[0],
                     external_id=row[1],
                     product_title=row[2],
                     product_url=row[3],
                     product_image_url=row[4],
-                    product_price=row[5] if row[5] else None,
+                    product_price=row[5],
                     product_currency=row[6],
                     upc=row[7],
                     mpn=row[8],
@@ -369,8 +382,6 @@ def catalogupdate(request):
 
                     response = requests.request("PATCH", url=url, json=payload, headers=headers)
                     delete = UpdateProductModel.objects.filter(owner=request.user).delete()
-                    
-                    print(response.text)
 
                                             
                 if response.status_code == 200:
@@ -395,36 +406,42 @@ def catalogupdate(request):
 @login_required
 def catalogadd(request):
     context = {
-        'form': UploadCsvModelForm(),
+        'form': UploadProductCatalogForm(),
         'nav_prod2_active': True
     }
     if request.method == 'POST':
-        data_form = UploadCsvModelForm(request.POST, request.FILES or None)
-        key = GetKey.objects.filter(owner=request.user).filter(active=True)
+        form = UploadProductCatalogForm(request.POST, request.FILES or None)
+        if form.is_valid():
+    
+            appkey = form.cleaned_data['appkey']
+            secretkey = form.cleaned_data['secretkey']
+            products = form.cleaned_data['productcatalog']
 
-        if key:
-            messages.success(request, f'App Key: {key[0].appkey}')
+            products_df = pd.read_csv(products)
+            products_df = products_df.fillna({'Description': 'null'})
+            products_df = products_df.fillna({'SKU': 'Null'})
+            products_df = products_df.fillna({'Product Price': '0'})
+            products_df['Product Price'] = products_df['Product Price'].astype(float)
+            products_df.fillna('', inplace=True)
 
-            appkey = key[0].appkey
-            secretkey = key[0].secretkey
+            for i, row in products_df.iterrows():
 
-            HttpResponse(appkey, secretkey)
+                AddProductModel.objects.create(
+                    external_id=row[0],
+                    product_title=row[1],
+                    description=row[2],
+                    product_url=row[3],
+                    product_price=row[4],
+                    sku=row[5],
+                    processed = False,
+                    owner=request.user,
+
+                )
+                print(row)
+
             
-            payload = {
-                "client_id": appkey,
-                "client_secret": secretkey,
-                "grant_type": "client_credentials"
-            }
+            utoken = getkey(request, appkey, secretkey)
 
-            headers = {
-                "Accept": "application/json",
-                "Content-Type": "application/json"
-            }
-            url = 'https://api.yotpo.com/oauth/token'
-            response = requests.request("GET", url=url, json=payload, headers=headers)
-            utoken = response.json()['access_token']
-
-        
             if utoken:
                 data = AddProductModel.objects.filter(owner=request.user).filter(processed=False)
                 serializer = AddProductModelSerializer(data, many=True)
@@ -436,7 +453,7 @@ def catalogadd(request):
                                 "product": {
                                     "external_id": i['external_id'],
                                     "name": i['product_title'],
-                                    "description": i['description'] if i['description'] else None,
+                                    "description": i['description'],
                                     "url": i['product_url'],
                                     "price": i['product_price'],
                                     "sku": i['sku']
@@ -453,12 +470,11 @@ def catalogadd(request):
                    
 
                     response = requests.request("POST", url=url, json=payload, headers=headers)
-                    delete = UpdateProductModel.objects.filter(owner=request.user).delete()
+                    delete = AddProductModel.objects.filter(owner=request.user).delete()
                     
-                    print(response.text)
 
                                             
-                if response.status_code == 200:
+                if response.status_code == 201:
                     messages.add_message(request, messages.SUCCESS, symbol_remove(response.text) + 'Product Added to Catalog')
                     
                 elif response.status_code == 400:

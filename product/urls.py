@@ -1,5 +1,5 @@
 from django.urls import path, include
-from .views import catalogupdate, catalogdisplay, viewproductbyid, resetproduct, uploadproductcatalog, catalogadd, uploadaddcatalog, resetproductdisplay
+from .views import catalogupdate, catalogdisplay, viewproductbyid, resetproduct, uploadproductcatalog, catalogadd, uploadaddcatalog, resetproductdisplay, resetaddproduct
 from rest_framework.authtoken.views import obtain_auth_token
 
 urlpatterns = [
@@ -11,6 +11,8 @@ urlpatterns = [
 
     path('viewproductbyid', viewproductbyid, name='viewproductbyid'),
     path('resetproduct', resetproduct, name='resetproduct'),
+    path('resetaddproduct', resetaddproduct, name='resetaddproduct'),
+    
     path('resetproductdisplay', resetproductdisplay, name='resetproductdisplay'),
     
     path('uploadproductcatalog', uploadproductcatalog, name='uploadproductcatalog'),

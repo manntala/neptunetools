@@ -32,7 +32,7 @@
   <meta name="msapplication-TileColor" content="#da532c">
   <meta name="theme-color" content="#ffffff">
 </head>
-<body data-gr-ext-installed style class="sidebar-icon-only">
+<body data-gr-ext-installed style class="{% if request.user.is_authenticated %}''{% else %}sidebar-icon-only{% endif %}">
   <div class="container-scroller">
     
     <!-- partial:partials/_navbar.html -->

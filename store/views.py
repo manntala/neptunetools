@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 import requests
@@ -10,17 +10,45 @@ def symbol_remove(string):
     replaced = string.replace('{', '').replace('}', '').replace('[', '').replace(']', '').replace('"', '').replace('\'', '').replace(':', ' ').replace(',', '').replace('errors', '').replace('error', '').replace('message', '')
     return replaced.title()
 
+
+def resetstore(request):
+    
+    context = {
+        'keyform': GetKeyForm(),
+        'nav_store1_active': True,
+    }
+    return redirect('removetoken')
+
+def resetaddstore(request):
+    
+    context = {
+        'nav_addtoken_active': True,
+        'keyform': GetKeyForm(),
+
+    }
+    return redirect('addtoken')
+
+def resetviewstore(request):
+    
+    context = {
+        'nav_addtoken_active': True,
+        'keyform': GetKeyForm(),
+
+    }
+    return redirect('storeview')
+
+
 @login_required
 def removetoken(request):
-    form = GetKeyForm()
+    keyform = GetKeyForm()
     context = {
         'nav_store1_active': True,
-        'form': form,
+        'keyform': keyform,
     }
 
     if request.method == 'POST':
-        form = GetKeyForm(request.POST)
-        if form.is_valid():
+        keyform = GetKeyForm(request.POST)
+        if keyform.is_valid():
             appkey = form.cleaned_data['appkey']
             secretkey = form.cleaned_data['secretkey']
 

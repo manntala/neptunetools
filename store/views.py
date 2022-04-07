@@ -49,12 +49,13 @@ def removetoken(request):
     if request.method == 'POST':
         keyform = GetKeyForm(request.POST)
         if keyform.is_valid():
-            appkey = form.cleaned_data['appkey']
-            secretkey = form.cleaned_data['secretkey']
+            appkey = keyform.cleaned_data['appkey']
+            secretkey = keyform.cleaned_data['secretkey']
 
             utoken = getkey(request, appkey, secretkey)
 
             context = {
+                'keyform': GetKeyForm,
                 'nav_store1_active': True,
                 }      
 

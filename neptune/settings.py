@@ -88,20 +88,6 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'neptune.wsgi.application'
 
-
-# Database
-# https://docs.djangoproject.com/en/4.0/ref/settings/#databases
-# DATABASES = {
-#         'default': {
-#             'ENGINE': 'django.db.backends.postgresql',
-#             'NAME': 'daeh43s6gh3viv',
-#             'USER': 'tvrhrbqgnohhah',
-#             'PASSWORD': '96c563a13d816f86f7a74f9cebd2966f3ff66cb4237457eb9d2f269e8f7c3efb',
-#             'HOST': 'ec2-44-195-191-252.compute-1.amazonaws.com',
-#             'PORT': '5432'
-#         }
-#     }
-
 if 'RDS_DB_NAME' in os.environ:
     DATABASES = {
         'default': {
@@ -169,6 +155,14 @@ DATA_UPLOAD_MAX_NUMBER_FIELDS = 50240
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': [
         'rest_framework.authentication.TokenAuthentication',
+    ]
+}
+
+REST_FRAMEWORK = {
+    # Use Django's standard `django.contrib.auth` permissions,
+    # or allow read-only access for unauthenticated users.
+    'DEFAULT_PERMISSION_CLASSES': [
+        'rest_framework.permissions.DjangoModelPermissionsOrAnonReadOnly',
     ]
 }
 

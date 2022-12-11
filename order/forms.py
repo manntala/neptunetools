@@ -1,6 +1,6 @@
 from django import forms
 from django.forms import ModelForm
-from .models import Csv, OrderProcessModel, GetKey
+from .models import Csv, OrderProcessModel, GetKey, OrderUpdateModel
 
 class OrderProcessForm(forms.ModelForm):
     class Meta:
@@ -22,4 +22,10 @@ class GetKeyForm(forms.Form):
     class Meta:
         fields = ('appkey', 'secretkey',)
 
+class CsvUpdateOrderModelForm(forms.ModelForm):
+    file_name = forms.FileField(widget=forms.FileInput(attrs={'placeholder':'Upload CSV file', 'accept':'.csv', 'class':'form-control', 'onchange':'triggerValidation(this)'}))
+
+    class Meta:
+        model = Csv
+        fields = ('file_name',)
         

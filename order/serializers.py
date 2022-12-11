@@ -6,7 +6,7 @@ from django.db.models import fields
 from rest_framework import serializers
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate
-from .models import OrderProcessModel
+from .models import OrderProcessModel, OrderUpdateModel
 
 class PostSerializer(serializers.ModelSerializer):
     class Meta:
@@ -20,6 +20,13 @@ class OrderProcessSerializer(serializers.ModelSerializer):
         model = OrderProcessModel
         fields = (
         'email', 'name', 'order_id', 'order_date', 'product_url', 'product_title'
+        )
+
+class OrderUpdateProcessSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = OrderUpdateModel
+        fields = (
+        'yotpo_order_id', 'first_name', 'last_name'
         )
         
 

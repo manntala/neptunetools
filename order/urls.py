@@ -1,5 +1,5 @@
 from django.urls import path, include
-from .views import PostView, home, uploadcsv, gettoken, send, display, displayid, activate, deactivate, resetorder, cancelorder
+from .views import PostView, home, uploadcsv, gettoken, send, update, display, displayid, activate, deactivate, resetorder, cancelorder, uploadcsvupdateform
 from rest_framework.authtoken.views import obtain_auth_token
 
 
@@ -18,6 +18,8 @@ urlpatterns = [
 
     # orders
     path('send/', send, name='send'),
+    path('update/', update, name='update'),
+    path('uploadcsvupdateform/', uploadcsvupdateform, name='uploadcsvupdateform'),
     path('display/', display, name='display'),
     path('displayid/<str:id>', displayid, name='displayid'),
 

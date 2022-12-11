@@ -42,10 +42,11 @@
               <span class="menu-title">Orders</span>
               <i class="menu-arrow"></i>
             </a>
-            <div class="collapse {% if nav_order1_active or nav_order2_active == True %}show{% endif %}" id="charts">
+            <div class="collapse {% if nav_order1_active or nav_order2_active or nav_order3_active == True %}show{% endif %}" id="charts">
               <ul class="nav flex-column sub-menu">
                 <li class="nav-item"> <a class="nav-link {% if nav_order1_active == True %}active{% endif %}" href="{% url 'send' %}">Send Orders</a></li>
                 <li class="nav-item"> <a class="nav-link {% if nav_order2_active == True %}active{% endif %}" href="{% url 'display' %}">View Orders</a></li>
+                <li class="nav-item"> <a class="nav-link {% if nav_order3_active == True %}active{% endif %}" href="{% url 'update' %}">Update Orders</a></li>
                 
               </ul>
             </div>

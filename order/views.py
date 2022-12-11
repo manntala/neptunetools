@@ -5,7 +5,7 @@ from django.contrib.auth.decorators import login_required
 
 from rest_framework import serializers
 from rest_framework import permissions
-from .forms import OrderProcessForm, CsvModelForm, GetKeyForm
+from .forms import OrderProcessForm, CsvModelForm, GetKeyForm, CsvUpdateOrderModelForm
 from django.contrib import messages
 from django.shortcuts import get_object_or_404, redirect, render
 import os
@@ -34,8 +34,8 @@ from rest_framework import generics
 from rest_framework.authtoken.models import Token
 from django.shortcuts import get_list_or_404, get_object_or_404
 from django.contrib.auth.models import User
-from .serializers import UserSerializer, RegisterSerializer, LoginSerializer, OrderProcessSerializer
-from .models import OrderProcessModel, OrderTemplate
+from .serializers import UserSerializer, RegisterSerializer, LoginSerializer, OrderProcessSerializer, OrderUpdateProcessSerializer
+from .models import OrderProcessModel, OrderTemplate, OrderUpdateModel
 
 from dashboard.views import getkey
 
@@ -114,6 +114,44 @@ def uploadcsv(request):
         # return render(request, 'order/dashboard.html', {'review_count': review_count})
     
     return render(request, 'order/send.html', {'form': form})
+
+
+@login_required 
+def uploadcsvupdateform(request):
+    form = CsvUpdateOrderModelForm(request.POST or None, request.FILES or None)
+    
+    if form.is_valid():
+        fs = form.save(commit=False)
+        fs.owner = request.user
+        fs.identifier = uuid.uuid4()
+        form.save()
+        form = CsvUpdateOrderModelForm()
+        obj = Csv.objects.get(identifier=fs.identifier)
+        with storage.open(obj.file_name.name, 'r') as f:
+            reader = csv.reader(f)
+            order_count = 0
+            for i, row in enumerate(reader):
+                order_count += 1
+                print(i)
+                if i==0:
+                    pass
+                else:
+                    OrderUpdateModel.objects.create(
+                    yotpo_order_id=row[0],
+                    first_name=row[1],
+                    last_name=row[2],
+                    sent="False",
+                    owner=request.user
+                    )
+                    print(row)
+            obj.activated = True
+            obj.save()
+        
+        messages.success(request, f'' + str(order_count-1) + ' ' + 'Record/s Added!')
+        return redirect(to='update')
+        # return render(request, 'order/dashboard.html', {'review_count': review_count})
+    
+    return render(request, 'order/update.html', {'form': form})    
 
 @login_required
 def dashboard(request):
@@ -272,6 +310,92 @@ def send(request):
     # end of post
          
     return render(request, 'order/send.html', context)
+
+
+
+@login_required
+def update(request):
+    form = CsvUpdateOrderModelForm()
+    template = OrderTemplate.objects.get(pk=2)
+    nav_order3_active = True
+    keyform = GetKeyForm(request.POST)
+
+    context = {
+        'form': form,
+        'template': template,
+        'nav_order3_active': nav_order3_active,
+        'keyform': keyform
+    }
+
+    if request.method == 'POST':
+        keyform = GetKeyForm(request.POST)
+
+        if keyform.is_valid():
+            appkey = keyform.cleaned_data['appkey']
+            secretkey = keyform.cleaned_data['secretkey']
+
+            utoken = getkey(request, appkey, secretkey)
+        
+            if utoken:
+                update_model_data = OrderUpdateModel.objects.filter(owner=request.user).filter(sent=False)
+                serializer = OrderUpdateProcessSerializer(update_model_data, many=True)
+
+                for i in serializer.data:
+                    print(i)
+                                
+                    payload = {
+                        "order": {"customer": {
+                            "external_id": i['yotpo_order_id'],
+                            "first_name": i['first_name'],
+                            "last_name": i['last_name'],
+                            }}}
+
+                    headers = {
+                        "X-Yotpo-Token": f"{utoken}",
+                        "Accept": "application/json",
+                        "Content-Type": "application/json"
+                        }
+                    
+                    url = f"https://api.yotpo.com/core/v3/stores/{appkey}/orders/{i['yotpo_order_id']}"
+
+                    response = requests.request("PATCH", url=url, json=payload, headers=headers)
+                    print(response.text)
+
+                         
+                if response.status_code == 200:
+                    messages.add_message(request, messages.SUCCESS, symbol_remove(response.text) + '!')   
+                    return redirect(to='update') 
+                    delete = OrderUpdateModel.objects.filter(owner=request.user).delete()
+                elif response.status_code == 400:
+                    messages.add_message(request, messages.ERROR, symbol_remove(response.text) + '!')  
+                    return redirect(to='update')  
+                    delete = OrderUpdateModel.objects.filter(owner=request.user).delete()
+                elif response.status_code == 409:
+                    messages.add_message(request, messages.ERROR, symbol_remove(response.text) + '!')   
+                    return redirect(to='update') 
+                    delete = OrderUpdateModel.objects.filter(owner=request.user).delete()
+                else:
+                    messages.add_message(request, messages.ERROR, symbol_remove(response.text) + '!')
+                    return redirect(to='update')
+                    delete = OrderUpdateModel.objects.filter(owner=request.user).delete()
+                  
+                    
+                     
+                # else:
+                #     messages.add_message(request, messages.ERROR, 'Invalid CSV!')
+                #     return redirect(to='send')
+
+            else:
+                messages.add_message(request, messages.ERROR, 'Please Add/Activate your AppKey/SecretKey!')
+                return redirect(to='update')
+
+        else:
+            messages.error(request, f'Please select an appkey!')
+            return redirect(to='update')
+   
+    # end of post
+         
+    return render(request, 'order/update.html', context)    
 
 @login_required
 def display(request):
